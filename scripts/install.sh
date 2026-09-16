@@ -21,9 +21,8 @@ else
     echo "[*] Host OS environment detected. Proceeding with pip installation."
 fi
 
-# 2. Upgrade pip and install termux-aichain (and optional ecosystem)
+# 2. Install termux-aichain (and optional ecosystem)
 echo "[*] Step 2/3: Installing termux-aichain package..."
-python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade termux-aichain
 
 if [ "$1" == "--all" ] || [ "$1" == "all" ] || [ "$1" == "--ecosystem" ]; then
