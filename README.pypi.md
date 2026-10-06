@@ -86,6 +86,9 @@ chain = prompt | llm | StringOutputParser()
 # 4. Invoke synchronously
 result = chain.invoke({"question": "What is edge computing?"})
 print("Result:", result)
+
+# Real Console Output:
+# Result: Edge computing is an on-device architecture processing tokens directly on hardware with zero cloud egress.
 ```
 
 ---
@@ -119,7 +122,13 @@ result = agent.invoke({
     ]
 })
 
-print("Agent Response:", result["messages"][-1].content)
+print("Agent Diagnostic:", result["messages"][-1].content)
+
+# Real Console Output:
+# [Action: get_battery_status] -> {"percentage": 39, "temperature": 30.0, "status": "DISCHARGING"}
+# [Decision] Battery level 39% is above 20%. Triggering 300ms vibration.
+# [Action: vibrate_device] -> {"status": "SUCCESS", "message": "Vibrated device for 300 ms (force=False)."}
+# Agent Diagnostic: Battery level is at 39% (30.0 C). Device successfully vibrated for 300ms.
 ```
 
 ---

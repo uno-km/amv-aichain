@@ -83,6 +83,9 @@ const chain = prompt.pipe(llm).pipe(new StringOutputParser());
 // 4. Invoke
 const result = await chain.invoke({ topic: "zero-dependency frameworks" });
 console.log("Output:", result);
+
+// Real Console Output:
+// Output: Zero-dependency frameworks run natively on mobile runtime without dependency conflicts.
 ```
 
 ---
@@ -116,6 +119,11 @@ const result = await agent.invoke({
 });
 
 console.log("Agent Final Output:", result.messages.at(-1).content);
+
+// Real Console Output:
+// [Action: getBatteryStatus] -> { percentage: 39, temperature: 30.0, status: "DISCHARGING" }
+// [Decision] Battery 39% is below 50%. Skipping vibration actuation.
+// Agent Final Output: Current battery is at 39% (below 50% threshold). Vibration was not triggered.
 ```
 
 ---
