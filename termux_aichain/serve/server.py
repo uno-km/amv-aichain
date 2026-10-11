@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
 ==============================================================================
 termux-aichain Serve Engine: 1-Line REST & SSE Serving (LangServe Alternative)

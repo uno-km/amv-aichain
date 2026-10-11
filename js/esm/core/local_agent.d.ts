@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0 OR Commercial-License
+ */
 import { OpenAICompatibleChat } from "./providers/openai_compatible.js";
 import { Tool, ToolPolicy, AgentState } from "../graph/agent.js";
 import { CompiledGraph } from "../graph/state.js";

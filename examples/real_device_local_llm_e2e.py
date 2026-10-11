@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
 termux-aichain Real-Device On-Device LLM & Agent End-to-End Test
 Manages local llama-server lifecycle and verifies complete AI chaining on Samsung Galaxy S20.

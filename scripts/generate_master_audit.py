@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
 ==============================================================================
 termux-aichain Master Audit Generator (scripts/generate_master_audit.py)

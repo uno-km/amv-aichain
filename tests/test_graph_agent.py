@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 from termux_aichain.graph.agent import create_react_agent, Tool, tool
 from termux_aichain.core.base import BaseChatModel
 from termux_aichain.core.schema import Message, HumanMessage, AIMessage, ToolMessage, GenerationResult

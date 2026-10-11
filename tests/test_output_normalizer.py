@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 from termux_aichain.output.normalizer import OutputParserPolicy
 import pytest
 from termux_aichain.output.scanner import extract_json_candidates, repair_json_light, try_parse_json

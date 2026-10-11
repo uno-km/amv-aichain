@@ -1,4 +1,8 @@
 /**
+ * Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0 OR Commercial-License
+ */
+/**
  * ==============================================================================
  * @termux-ai/chain: Sovereign Zero-Dependency Edge AI Framework for Termux & Android
  * ==============================================================================

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0 OR Commercial-License
+ */
 import test from "node:test";
 import assert from "node:assert";
 import { PromptTemplate, ChatPromptTemplate } from "../js/esm/core/prompt.js";
