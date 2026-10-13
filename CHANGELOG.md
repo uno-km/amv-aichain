@@ -1,3 +1,15 @@
+# v1.2.0 (2026-10-13) — Fail-Fast Zero-Silent-Exception & ameva-runtime v2 Integration
+
+Eliminated all silent exception handlers across 136 unit tests, migrated hardware acceleration to ameva-runtime v2, and integrated cluster orchestrator adapter.
+
+### Key Changes
+- Purged all bare except:pass blocks and subprocess exception black holes (136 unit tests verified).
+- Migrated hardware acceleration dependency to ameva-runtime v2.
+- Integrated AMEVA cluster orchestrator control-plane adapter.
+- Added live Snapdragon S25 and Exynos A53 E2E telemetry recipes.
+
+---
+
 # Changelog
 
 All notable changes to 	ermux-aichain will be documented in this file.
