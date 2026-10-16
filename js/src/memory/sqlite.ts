@@ -9,6 +9,8 @@
  */
 
 import { BaseEmbeddings } from "./embeddings.js";
+import { Runnable, createPipeline } from "../core/base.js";
+import { Document } from "../core/splitters.js";
 
 export function cosineSimilarity(v1: number[], v2: number[]): number {
   if (v1.length !== v2.length || v1.length === 0) return 0;
@@ -137,5 +139,39 @@ export class MicroVectorStore {
 
   clear(): void {
     this.items = [];
+  }
+
+  asRetriever(options?: { k?: number; searchType?: "similarity" | "hybrid" }): VectorStoreRetriever {
+    return new VectorStoreRetriever(this, options);
+  }
+}
+
+export class VectorStoreRetriever implements Runnable<string, Document[]> {
+  vectorstore: MicroVectorStore;
+  k: number;
+  searchType: "similarity" | "hybrid";
+
+  constructor(vectorstore: MicroVectorStore, options: { k?: number; searchType?: "similarity" | "hybrid" } = {}) {
+    this.vectorstore = vectorstore;
+    this.k = options.k ?? 4;
+    this.searchType = options.searchType ?? "similarity";
+  }
+
+  async invoke(query: string, options?: any): Promise<Document[]> {
+    const k = options?.k ?? this.k;
+    let results: Array<{ content: string; metadata: Record<string, any>; score: number }>;
+    if (this.searchType === "hybrid") {
+      results = await this.vectorstore.hybridSearch(query, k);
+    } else {
+      results = await this.vectorstore.similaritySearch(query, k);
+    }
+    return results.map(r => ({
+      pageContent: r.content,
+      metadata: { ...r.metadata, score: r.score }
+    }));
+  }
+
+  pipe<NextOutput>(next: Runnable<Document[], NextOutput> | ((input: Document[]) => Promise<NextOutput> | NextOutput)): Runnable<string, NextOutput> {
+    return createPipeline([this, next]);
   }
 }

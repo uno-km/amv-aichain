@@ -37,3 +37,37 @@ export declare class RecursiveCharacterTextSplitter {
     private splitRecursive;
     private mergeSplits;
 }
+export interface BaseLoader {
+    load(): Promise<Document[]> | Document[];
+}
+export declare class TextLoader implements BaseLoader {
+    filePath: string;
+    encoding: BufferEncoding;
+    constructor(filePath: string, encoding?: BufferEncoding);
+    load(): Document[];
+}
+export declare class MarkdownLoader implements BaseLoader {
+    filePath: string;
+    constructor(filePath: string);
+    load(): Document[];
+}
+export declare class JSONLoader implements BaseLoader {
+    filePath: string;
+    contentKey?: string;
+    constructor(filePath: string, contentKey?: string);
+    load(): Document[];
+}
+export declare class DirectoryLoader implements BaseLoader {
+    dirPath: string;
+    recursive: boolean;
+    silentErrors: boolean;
+    loaderCls?: new (filePath: string) => BaseLoader;
+    constructor(dirPath: string, options?: {
+        recursive?: boolean;
+        silentErrors?: boolean;
+        loaderCls?: new (filePath: string) => BaseLoader;
+    });
+    load(): Document[];
+    private scanDir;
+}
+export declare function formatDocs(docs: Document[], separator?: string): string;

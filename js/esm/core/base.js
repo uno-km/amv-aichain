@@ -66,6 +66,49 @@ export class RunnableSequence {
         return new RunnableSequence([...this.steps, nextRunnable]);
     }
 }
+export class RunnablePassthrough {
+    constructor(fn) {
+        this.fn = fn;
+    }
+    async invoke(input, options) {
+        if (this.fn) {
+            return await this.fn(input);
+        }
+        return input;
+    }
+    pipe(next) {
+        return createPipeline([this, next]);
+    }
+}
+export class RunnableParallel {
+    constructor(steps) {
+        this.steps = {};
+        for (const [k, v] of Object.entries(steps)) {
+            if (typeof v === "function") {
+                this.steps[k] = new RunnableLambda(v);
+            }
+            else if (typeof v === "object" && v !== null && "invoke" in v) {
+                this.steps[k] = v;
+            }
+            else {
+                throw new TypeError(`RunnableParallel step '${k}' must be runnable or function`);
+            }
+        }
+    }
+    async invoke(input, options) {
+        const keys = Object.keys(this.steps);
+        const promises = keys.map(k => this.steps[k].invoke(input, options));
+        const values = await Promise.all(promises);
+        const result = {};
+        for (let i = 0; i < keys.length; i++) {
+            result[keys[i]] = values[i];
+        }
+        return result;
+    }
+    pipe(next) {
+        return createPipeline([this, next]);
+    }
+}
 export function createPipeline(steps) {
     const normalized = [];
     for (const s of steps) {
@@ -77,6 +120,9 @@ export function createPipeline(steps) {
         }
         else if (typeof s === "object" && s !== null && "invoke" in s) {
             normalized.push(s);
+        }
+        else if (typeof s === "object" && s !== null) {
+            normalized.push(new RunnableParallel(s));
         }
         else {
             throw new TypeError(`Cannot compose non-runnable element: ${typeof s}`);

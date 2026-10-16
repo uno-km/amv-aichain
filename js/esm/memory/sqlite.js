@@ -7,6 +7,8 @@
  * @termux-ai/chain Memory Engine: In-Memory & Cosine Vector Store (TypeScript ESM)
  * ==============================================================================
  */
+import { createPipeline } from "../core/base.js";
+
 export function cosineSimilarity(v1, v2) {
     if (v1.length !== v2.length || v1.length === 0)
         return 0;
@@ -103,5 +105,35 @@ export class MicroVectorStore {
     }
     clear() {
         this.items = [];
+    }
+    asRetriever(options) {
+        return new VectorStoreRetriever(this, options);
+    }
+}
+export class VectorStoreRetriever {
+    vectorstore;
+    k;
+    searchType;
+    constructor(vectorstore, options = {}) {
+        this.vectorstore = vectorstore;
+        this.k = options.k ?? 4;
+        this.searchType = options.searchType ?? "similarity";
+    }
+    async invoke(query, options) {
+        const k = options?.k ?? this.k;
+        let results;
+        if (this.searchType === "hybrid") {
+            results = await this.vectorstore.hybridSearch(query, k);
+        }
+        else {
+            results = await this.vectorstore.similaritySearch(query, k);
+        }
+        return results.map(r => ({
+            pageContent: r.content,
+            metadata: { ...r.metadata, score: r.score }
+        }));
+    }
+    pipe(next) {
+        return createPipeline([this, next]);
     }
 }

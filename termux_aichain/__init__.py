@@ -12,7 +12,7 @@ from __future__ import annotations
 import importlib
 from typing import Any
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 __author__ = "UnoKim <uno-km@users.noreply.github.com>"
 
 _LAZY_IMPORTS = {
@@ -32,6 +32,8 @@ _LAZY_IMPORTS = {
     "Runnable": ("termux_aichain.core.base", "Runnable"),
     "RunnableLambda": ("termux_aichain.core.base", "RunnableLambda"),
     "RunnableSequence": ("termux_aichain.core.base", "RunnableSequence"),
+    "RunnablePassthrough": ("termux_aichain.core.base", "RunnablePassthrough"),
+    "RunnableParallel": ("termux_aichain.core.base", "RunnableParallel"),
     "BaseChatModel": ("termux_aichain.core.base", "BaseChatModel"),
     # Providers
     "OpenAICompatibleChat": ("termux_aichain.core.providers.openai_compatible", "OpenAICompatibleChat"),
@@ -82,6 +84,8 @@ _LAZY_IMPORTS = {
     "TextLoader": ("termux_aichain.core.splitters", "TextLoader"),
     "MarkdownLoader": ("termux_aichain.core.splitters", "MarkdownLoader"),
     "JSONLoader": ("termux_aichain.core.splitters", "JSONLoader"),
+    "DirectoryLoader": ("termux_aichain.core.splitters", "DirectoryLoader"),
+    "format_docs": ("termux_aichain.core.splitters", "format_docs"),
     # Graph
     "StateGraph": ("termux_aichain.graph.state", "StateGraph"),
     "CompiledGraph": ("termux_aichain.graph.state", "CompiledGraph"),
@@ -94,6 +98,9 @@ _LAZY_IMPORTS = {
     "ConversationBufferMemory": ("termux_aichain.memory.buffer", "ConversationBufferMemory"),
     "SQLiteEntityMemory": ("termux_aichain.memory.sqlite", "SQLiteEntityMemory"),
     "SQLiteVectorStore": ("termux_aichain.memory.sqlite", "SQLiteVectorStore"),
+    "VectorStoreRetriever": ("termux_aichain.memory.sqlite", "VectorStoreRetriever"),
+    "NativeVectorEngine": ("termux_aichain.memory.simd", "NativeVectorEngine"),
+    "get_simd_engine": ("termux_aichain.memory.simd", "get_simd_engine"),
     "FactExtractor": ("termux_aichain.memory.extractor", "FactExtractor"),
     "BaseEmbeddings": ("termux_aichain.memory.embeddings", "BaseEmbeddings"),
     "LocalEmbeddings": ("termux_aichain.memory.embeddings", "LocalEmbeddings"),

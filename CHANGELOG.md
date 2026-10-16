@@ -1,3 +1,16 @@
+# v1.3.0 (2026-10-14) — LCEL RAG Pipeline, SIMD Vector Acceleration & Parallel StateGraph
+
+Delivered 1st-class LCEL RAG abstractions, C-ABI dynamic SIMD vector acceleration engine, parallel Fan-Out/Fan-In StateGraph execution with State Reducer, and complete Python & Node.js ESM test suite expansion (171 pytest + 21 node:test 100% Pass).
+
+### Key Changes
+- **LCEL RAG Pipeline**: Added `RunnablePassthrough`, `RunnableParallel` with automatic dictionary pipe coercion, `DirectoryLoader` recursive scanner, and `format_docs` context formatter.
+- **SIMD Vector Engine**: Implemented `termux_aichain.memory.simd` with dynamic C-ABI loader for ARM NEON SIMD vector cosine similarity, zero-overhead stdlib fallback, and strict NaN/Inf boundary protections.
+- **Parallel StateGraph Concurrency**: Extended `StateGraph` to support multi-target Fan-Out & Fan-In concurrently via `ThreadPoolExecutor` (sync) and `asyncio.gather` (async), accompanied by deep State Reducer for concurrent state merging.
+- **Retriever Integration**: Implemented `SQLiteVectorStore.as_retriever()` and `MicroVectorStore.asRetriever()` across Python and TypeScript/Node.js ESM for seamless 1-line RAG chaining.
+- **Strict Test Coverage**: Expanded unit tests to 171 Python test cases and 21 Node.js ESM test cases with 100% pass rate.
+
+---
+
 # v1.2.0 (2026-10-13) — Fail-Fast Zero-Silent-Exception & ameva-runtime v2 Integration
 
 Eliminated all silent exception handlers across 136 unit tests, migrated hardware acceleration to ameva-runtime v2, and integrated cluster orchestrator adapter.

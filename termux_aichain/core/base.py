@@ -31,13 +31,67 @@ class Runnable(ABC):
     async def astream(self, input_data: Any, **kwargs: Any) -> AsyncIterator[Any]:
         yield await self.ainvoke(input_data, **kwargs)
 
-    def __or__(self, other: Union[Runnable, Callable[[Any], Any]]) -> RunnableSequence:
-        right = other if isinstance(other, Runnable) else RunnableLambda(other)
+    def __or__(self, other: Union[Runnable, Callable[[Any], Any], Dict[str, Any]]) -> RunnableSequence:
+        right = _coerce_runnable(other)
         return RunnableSequence(self, right)
 
-    def __ror__(self, other: Union[Runnable, Callable[[Any], Any]]) -> RunnableSequence:
-        left = other if isinstance(other, Runnable) else RunnableLambda(other)
+    def __ror__(self, other: Union[Runnable, Callable[[Any], Any], Dict[str, Any]]) -> RunnableSequence:
+        left = _coerce_runnable(other)
         return RunnableSequence(left, self)
+
+def _coerce_runnable(obj: Any) -> Runnable:
+    """Coerces Runnables, callables, or dictionary mappings into pipe-compatible Runnables."""
+    if isinstance(obj, Runnable):
+        return obj
+    elif isinstance(obj, dict):
+        return RunnableParallel(obj)
+    elif callable(obj):
+        return RunnableLambda(obj)
+    raise TypeError(f"Invalid step in sequence: expected Runnable, dict, or callable, got {type(obj)}")
+
+class RunnablePassthrough(Runnable):
+    """Passes input through unchanged or assigns calculated keys."""
+
+    def __init__(self, func: Optional[Callable[[Any], Any]] = None):
+        self.func = func
+
+    def invoke(self, input_data: Any, **kwargs: Any) -> Any:
+        if self.func is not None:
+            return self.func(input_data)
+        return input_data
+
+    async def ainvoke(self, input_data: Any, **kwargs: Any) -> Any:
+        if self.func is not None:
+            if inspect.iscoroutinefunction(self.func):
+                return await self.func(input_data)
+            return await asyncio.to_thread(self.func, input_data)
+        return input_data
+
+class RunnableParallel(Runnable):
+    """Executes a mapping of Runnables concurrently and aggregates results into a dict."""
+
+    def __init__(
+        self,
+        steps: Optional[Dict[str, Union[Runnable, Callable[[Any], Any], Any]]] = None,
+        **kwargs: Any,
+    ):
+        merged: Dict[str, Any] = {}
+        if steps is not None:
+            merged.update(steps)
+        if kwargs:
+            merged.update(kwargs)
+        self.steps = {k: _coerce_runnable(v) for k, v in merged.items()}
+
+    def invoke(self, input_data: Any, **kwargs: Any) -> Dict[str, Any]:
+        results: Dict[str, Any] = {}
+        for key, runnable in self.steps.items():
+            results[key] = runnable.invoke(input_data, **kwargs)
+        return results
+
+    async def ainvoke(self, input_data: Any, **kwargs: Any) -> Dict[str, Any]:
+        tasks = [runnable.ainvoke(input_data, **kwargs) for runnable in self.steps.values()]
+        values = await asyncio.gather(*tasks)
+        return dict(zip(self.steps.keys(), values))
 
 class RunnableLambda(Runnable):
     """Wraps any standard Python callable into a pipe-compatible Runnable."""
@@ -58,17 +112,13 @@ class RunnableLambda(Runnable):
 class RunnableSequence(Runnable):
     """Executes multiple Runnables sequentially in a linear pipe chain."""
 
-    def __init__(self, *steps: Runnable):
+    def __init__(self, *steps: Any):
         self.steps: List[Runnable] = []
         for step in steps:
             if isinstance(step, RunnableSequence):
                 self.steps.extend(step.steps)
-            elif isinstance(step, Runnable):
-                self.steps.append(step)
-            elif callable(step):
-                self.steps.append(RunnableLambda(step))
             else:
-                raise TypeError(f"Invalid step in sequence: {type(step)}")
+                self.steps.append(_coerce_runnable(step))
 
     def invoke(self, input_data: Any, **kwargs: Any) -> Any:
         current = input_data
@@ -110,9 +160,13 @@ class RunnableSequence(Runnable):
         async for chunk in self.steps[-1].astream(current, **kwargs):
             yield chunk
 
-    def __or__(self, other: Union[Runnable, Callable[[Any], Any]]) -> RunnableSequence:
-        right = other if isinstance(other, Runnable) else RunnableLambda(other)
+    def __or__(self, other: Union[Runnable, Callable[[Any], Any], Dict[str, Any]]) -> RunnableSequence:
+        right = _coerce_runnable(other)
         return RunnableSequence(*self.steps, right)
+
+    def __ror__(self, other: Union[Runnable, Callable[[Any], Any], Dict[str, Any]]) -> RunnableSequence:
+        left = _coerce_runnable(other)
+        return RunnableSequence(left, *self.steps)
 
 class BaseChatModel(Runnable, ABC):
     """Abstract Base Class for Chat Models."""

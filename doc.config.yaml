@@ -2,8 +2,8 @@ name: Termux-AIChain
 lib_slug: aichain
 package_name_pypi: termux-aichain
 package_name_npm: termux-aichain
-version: v1.2.0
-release_name: Fail-Fast Zero-Silent-Exception & ameva-runtime v2 Integration
+version: v1.3.0
+release_name: LCEL RAG Pipeline, SIMD Vector Acceleration & Parallel StateGraph
 license: Apache-2.0
 platform: Android Termux (ARM64) / Python 3.10+ / Node.js 18+ ESM
 github_repo_url: https://github.com/uno-km/termux-aichain

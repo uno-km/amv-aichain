@@ -26,6 +26,18 @@ export declare class RunnableSequence<Input = any, Output = any> implements Runn
     stream(input: Input, options?: any): AsyncIterable<any>;
     pipe<NextOutput>(next: Runnable<Output, NextOutput> | ((input: Output) => Promise<NextOutput> | NextOutput)): Runnable<Input, NextOutput>;
 }
+export declare class RunnablePassthrough<T = any> implements Runnable<T, T> {
+    private fn?;
+    constructor(fn?: (input: T) => any);
+    invoke(input: T, options?: any): Promise<T>;
+    pipe<NextOutput>(next: Runnable<T, NextOutput> | ((input: T) => Promise<NextOutput> | NextOutput)): Runnable<T, NextOutput>;
+}
+export declare class RunnableParallel<Input = any, Output = Record<string, any>> implements Runnable<Input, Output> {
+    steps: Record<string, Runnable>;
+    constructor(steps: Record<string, any>);
+    invoke(input: Input, options?: any): Promise<Output>;
+    pipe<NextOutput>(next: Runnable<Output, NextOutput> | ((input: Output) => Promise<NextOutput> | NextOutput)): Runnable<Input, NextOutput>;
+}
 export declare function createPipeline(steps: any[]): RunnableSequence;
 export declare abstract class BaseChatModel implements Runnable<Message[] | string, AIMessage> {
     abstract generate(messages: Message[] | string, options?: any): Promise<GenerationResult>;

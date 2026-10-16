@@ -14,28 +14,17 @@ import os
 import math
 import json
 import heapq
+import asyncio
 import sqlite3
 from typing import Any, Dict, List, Optional, Tuple, Union
+from termux_aichain.core.base import Runnable
 from termux_aichain.core.splitters import Document
 from termux_aichain.memory.embeddings import BaseEmbeddings
+from termux_aichain.memory.simd import get_simd_engine
 
 def _cosine_similarity(v1: List[float], v2: List[float]) -> float:
-    """Computes cosine similarity between two float vectors with NaN/Inf protection."""
-    if len(v1) != len(v2) or not v1:
-        return 0.0
-    dot = 0.0
-    norm_a = 0.0
-    norm_b = 0.0
-    for a, b in zip(v1, v2):
-        if math.isnan(a) or math.isnan(b) or math.isinf(a) or math.isinf(b):
-            return 0.0
-        dot += a * b
-        norm_a += a * a
-        norm_b += b * b
-
-    if norm_a == 0.0 or norm_b == 0.0:
-        return 0.0
-    return dot / (math.sqrt(norm_a) * math.sqrt(norm_b))
+    """Computes cosine similarity between two float vectors utilizing native SIMD when available."""
+    return get_simd_engine().cosine_similarity(v1, v2)
 
 class SQLiteEntityMemory:
     """Persistent entity & key-value fact memory backed by SQLite with WAL optimization."""
@@ -127,14 +116,15 @@ class SQLiteVectorStore:
     def __init__(
         self,
         db_path: str = ":memory:",
-        embeddings: Optional[BaseEmbeddings] = None
+        embeddings: Optional[BaseEmbeddings] = None,
+        embedding_fn: Optional[BaseEmbeddings] = None,
     ):
         self.db_path = db_path
-        self.embeddings = embeddings
+        self.embeddings = embeddings if embeddings is not None else embedding_fn
         self._fts5_supported = False
         if db_path != ":memory:":
             os.makedirs(os.path.dirname(os.path.abspath(db_path)), exist_ok=True)
-        self.conn = sqlite3.connect(self.db_path)
+        self.conn = sqlite3.connect(self.db_path, check_same_thread=False)
         if self.db_path != ":memory:":
             import logging as _logging
             _vec_logger = _logging.getLogger("termux_aichain.memory.sqlite")
@@ -269,6 +259,26 @@ class SQLiteVectorStore:
         query_emb = self.embeddings.embed_query(query)
         return self.similarity_search_by_vector(query_emb, k=k)
 
+    def similarity_search_with_score_by_vector(
+        self,
+        query_embedding: List[float],
+        k: int = 4
+    ) -> List[Tuple[Document, float]]:
+        """Executes vector search and returns tuples of (Document, score)."""
+        docs = self.similarity_search_by_vector(query_embedding, k=k)
+        return [(doc, doc.score if doc.score is not None else 0.0) for doc in docs]
+
+    def similarity_search_with_score(
+        self,
+        query: str,
+        k: int = 4
+    ) -> List[Tuple[Document, float]]:
+        """Computes query embedding and returns documents alongside their cosine similarity score."""
+        if self.embeddings is None:
+            raise ValueError("similarity_search_with_score requires an embeddings model bound to SQLiteVectorStore.")
+        query_emb = self.embeddings.embed_query(query)
+        return self.similarity_search_with_score_by_vector(query_emb, k=k)
+
     def hybrid_search(
         self,
         query: str,
@@ -372,3 +382,51 @@ class SQLiteVectorStore:
 
     def close(self) -> None:
         self.conn.close()
+
+    @property
+    def is_simd_accelerated(self) -> bool:
+        """Returns True if native SIMD acceleration is currently active."""
+        return get_simd_engine().is_accelerated
+
+    @property
+    def simd_backend_name(self) -> str:
+        """Returns the active computational backend name."""
+        return get_simd_engine().backend_name
+
+    def as_retriever(
+        self,
+        search_type: str = "similarity",
+        k: int = 4,
+        **kwargs: Any
+    ) -> VectorStoreRetriever:
+        """
+        Creates a Runnable VectorStoreRetriever instance compatible with LCEL pipe chaining.
+        Supports search_type='similarity' or 'hybrid'.
+        """
+        search_kwargs = {"k": k, **kwargs}
+        return VectorStoreRetriever(self, search_type=search_type, search_kwargs=search_kwargs)
+
+class VectorStoreRetriever(Runnable):
+    """
+    Zero-dependency Runnable Retriever wrapper for SQLiteVectorStore.
+    Seamlessly integrates into LCEL pipelines: retriever | format_docs | prompt | llm.
+    """
+
+    def __init__(
+        self,
+        vectorstore: SQLiteVectorStore,
+        search_type: str = "similarity",
+        search_kwargs: Optional[Dict[str, Any]] = None
+    ):
+        self.vectorstore = vectorstore
+        self.search_type = search_type
+        self.search_kwargs = search_kwargs or {}
+
+    def invoke(self, query: str, **kwargs: Any) -> List[Document]:
+        merged = {**self.search_kwargs, **kwargs}
+        if self.search_type == "hybrid":
+            return self.vectorstore.hybrid_search(query, **merged)
+        return self.vectorstore.similarity_search(query, **merged)
+
+    async def ainvoke(self, query: str, **kwargs: Any) -> List[Document]:
+        return await asyncio.to_thread(self.invoke, query, **kwargs)

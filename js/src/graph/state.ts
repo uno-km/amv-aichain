@@ -12,18 +12,41 @@ export const START = "__start__";
 export const END = "__end__";
 
 export type StateNodeFn<T = any> = (state: T) => Promise<Partial<T> | void> | Partial<T> | void;
-export type ConditionFn<T = any> = (state: T) => Promise<string> | string;
+export type ConditionFn<T = any> = (state: T) => Promise<string | string[]> | string | string[];
 
 export interface ConditionalEdge<T = any> {
   condition: ConditionFn<T>;
   pathMap?: Record<string, string>;
 }
 
+export function mergeState<T extends Record<string, any>>(current: T, update: Partial<T>): T {
+  const merged: any = { ...current };
+  for (const [key, val] of Object.entries(update)) {
+    if (val === undefined) continue;
+    const existing = merged[key];
+    if (Array.isArray(existing) && Array.isArray(val)) {
+      merged[key] = [...existing, ...val];
+    } else if (
+      existing &&
+      typeof existing === "object" &&
+      !Array.isArray(existing) &&
+      val &&
+      typeof val === "object" &&
+      !Array.isArray(val)
+    ) {
+      merged[key] = { ...existing, ...val };
+    } else {
+      merged[key] = val;
+    }
+  }
+  return merged;
+}
+
 export class StateGraph<T = Record<string, any>> {
   nodes: Map<string, StateNodeFn<T>> = new Map();
-  edges: Map<string, string> = new Map();
+  edges: Map<string, string[]> = new Map();
   conditionalEdges: Map<string, ConditionalEdge<T>> = new Map();
-  entryPoint?: string;
+  entryPoints: string[] = [];
 
   constructor(stateSchema?: any) {}
 
@@ -32,22 +55,25 @@ export class StateGraph<T = Record<string, any>> {
     return this;
   }
 
-  addEdge(fromNode: string, toNode: string): this {
+  addEdge(fromNode: string, toNode: string | string[]): this {
+    const targets = Array.isArray(toNode) ? toNode : [toNode];
     if (fromNode === START) {
-      this.entryPoint = toNode;
+      this.entryPoints = targets;
     } else {
-      this.edges.set(fromNode, toNode);
+      const existing = this.edges.get(fromNode) ?? [];
+      this.edges.set(fromNode, [...existing, ...targets]);
     }
     return this;
   }
 
   setEntryPoint(nodeName: string): this {
-    this.entryPoint = nodeName;
+    this.entryPoints = [nodeName];
     return this;
   }
 
   setFinishPoint(nodeName: string): this {
-    this.edges.set(nodeName, END);
+    const existing = this.edges.get(nodeName) ?? [];
+    this.edges.set(nodeName, [...existing, END]);
     return this;
   }
 
@@ -57,102 +83,142 @@ export class StateGraph<T = Record<string, any>> {
   }
 
   compile(): CompiledGraph<T> {
-    if (!this.entryPoint) {
+    if (this.entryPoints.length === 0) {
       throw new Error("No entry point defined. Call setEntryPoint or addEdge(START, ...).");
     }
     return new CompiledGraph<T>(
       new Map(this.nodes),
       new Map(this.edges),
       new Map(this.conditionalEdges),
-      this.entryPoint
+      [...this.entryPoints]
     );
   }
 }
 
 export class CompiledGraph<T = Record<string, any>> {
   nodes: Map<string, StateNodeFn<T>>;
-  edges: Map<string, string>;
+  edges: Map<string, string[]>;
   conditionalEdges: Map<string, ConditionalEdge<T>>;
-  entryPoint: string;
+  entryPoints: string[];
 
   constructor(
     nodes: Map<string, StateNodeFn<T>>,
-    edges: Map<string, string>,
+    edges: Map<string, string[]>,
     conditionalEdges: Map<string, ConditionalEdge<T>>,
-    entryPoint: string
+    entryPoints: string[]
   ) {
     this.nodes = nodes;
     this.edges = edges;
     this.conditionalEdges = conditionalEdges;
-    this.entryPoint = entryPoint;
+    this.entryPoints = entryPoints;
   }
 
   async invoke(initialState: T, maxIterations: number = 25): Promise<T> {
     let currentState: T = { ...initialState };
-    let currentNode: string | undefined = this.entryPoint;
+    let currentNodes: string[] = [...this.entryPoints];
     let iterations = 0;
 
-    while (currentNode && currentNode !== END) {
+    while (currentNodes.length > 0 && !currentNodes.every(n => n === END)) {
       iterations++;
       if (iterations > maxIterations) {
         throw new Error(`Graph execution exceeded max iterations limit (${maxIterations}).`);
       }
 
-      const nodeFn = this.nodes.get(currentNode);
-      if (!nodeFn) {
-        throw new Error(`Node '${currentNode}' is not defined in graph.`);
+      const activeNodes = currentNodes.filter(n => n !== END);
+      if (activeNodes.length === 0) break;
+
+      const results = await Promise.all(
+        activeNodes.map(async nodeName => {
+          const nodeFn = this.nodes.get(nodeName);
+          if (!nodeFn) {
+            throw new Error(`Node '${nodeName}' is not defined in graph.`);
+          }
+          const res = await nodeFn(currentState);
+          return { nodeName, res };
+        })
+      );
+
+      for (const { res } of results) {
+        if (res && typeof res === "object") {
+          currentState = mergeState(currentState, res);
+        }
       }
 
-      const result = await nodeFn(currentState);
-      if (result && typeof result === "object") {
-        currentState = { ...currentState, ...result };
+      const nextNodeSet = new Set<string>();
+      for (const { nodeName } of results) {
+        const condEdge = this.conditionalEdges.get(nodeName);
+        if (condEdge) {
+          const targetKey: string | string[] = await Promise.resolve(condEdge.condition(currentState));
+          const targetKeys = Array.isArray(targetKey) ? targetKey : [targetKey];
+          for (const tk of targetKeys) {
+            const resolved = condEdge.pathMap ? (condEdge.pathMap[tk] ?? tk) : tk;
+            nextNodeSet.add(resolved);
+          }
+        } else if (this.edges.has(nodeName)) {
+          for (const target of this.edges.get(nodeName)!) {
+            nextNodeSet.add(target);
+          }
+        } else {
+          nextNodeSet.add(END);
+        }
       }
-
-      const condEdge: ConditionalEdge<T> | undefined = this.conditionalEdges.get(currentNode);
-      if (condEdge) {
-        const targetKey: string = await Promise.resolve(condEdge.condition(currentState));
-        currentNode = condEdge.pathMap ? condEdge.pathMap[targetKey] : targetKey;
-      } else if (this.edges.has(currentNode)) {
-        currentNode = this.edges.get(currentNode);
-      } else {
-        currentNode = END;
-      }
+      currentNodes = Array.from(nextNodeSet);
     }
 
     return currentState;
   }
 
-  async *stream(initialState: T, maxIterations: number = 25): AsyncGenerator<[string, T]> {
+  async *stream(initialState: T, maxIterations: number = 25): AsyncGenerator<[string[], T]> {
     let currentState: T = { ...initialState };
-    let currentNode: string | undefined = this.entryPoint;
+    let currentNodes: string[] = [...this.entryPoints];
     let iterations = 0;
 
-    while (currentNode && currentNode !== END) {
+    while (currentNodes.length > 0 && !currentNodes.every(n => n === END)) {
       iterations++;
       if (iterations > maxIterations) {
         throw new Error(`Graph execution exceeded max iterations limit (${maxIterations}).`);
       }
 
-      const nodeFn = this.nodes.get(currentNode);
-      if (!nodeFn) {
-        throw new Error(`Node '${currentNode}' is not defined in graph.`);
-      }
+      const activeNodes = currentNodes.filter(n => n !== END);
+      if (activeNodes.length === 0) break;
 
-      const result = await nodeFn(currentState);
-      if (result && typeof result === "object") {
-        currentState = { ...currentState, ...result };
-      }
-      yield [currentNode, currentState];
+      const results = await Promise.all(
+        activeNodes.map(async nodeName => {
+          const nodeFn = this.nodes.get(nodeName);
+          if (!nodeFn) {
+            throw new Error(`Node '${nodeName}' is not defined in graph.`);
+          }
+          const res = await nodeFn(currentState);
+          return { nodeName, res };
+        })
+      );
 
-      const condEdge: ConditionalEdge<T> | undefined = this.conditionalEdges.get(currentNode);
-      if (condEdge) {
-        const targetKey: string = await Promise.resolve(condEdge.condition(currentState));
-        currentNode = condEdge.pathMap ? condEdge.pathMap[targetKey] : targetKey;
-      } else if (this.edges.has(currentNode)) {
-        currentNode = this.edges.get(currentNode);
-      } else {
-        currentNode = END;
+      for (const { res } of results) {
+        if (res && typeof res === "object") {
+          currentState = mergeState(currentState, res);
+        }
       }
+      yield [activeNodes, currentState];
+
+      const nextNodeSet = new Set<string>();
+      for (const { nodeName } of results) {
+        const condEdge = this.conditionalEdges.get(nodeName);
+        if (condEdge) {
+          const targetKey: string | string[] = await Promise.resolve(condEdge.condition(currentState));
+          const targetKeys = Array.isArray(targetKey) ? targetKey : [targetKey];
+          for (const tk of targetKeys) {
+            const resolved = condEdge.pathMap ? (condEdge.pathMap[tk] ?? tk) : tk;
+            nextNodeSet.add(resolved);
+          }
+        } else if (this.edges.has(nodeName)) {
+          for (const target of this.edges.get(nodeName)!) {
+            nextNodeSet.add(target);
+          }
+        } else {
+          nextNodeSet.add(END);
+        }
+      }
+      currentNodes = Array.from(nextNodeSet);
     }
   }
 }

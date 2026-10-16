@@ -248,3 +248,60 @@ class JSONLoader(BaseLoader):
                 text = json.dumps(data, ensure_ascii=False)
             docs.append(Document(page_content=text, metadata={"source": self.file_path}))
         return docs
+
+class DirectoryLoader(BaseLoader):
+    """Recursively scans and loads all documents in a directory."""
+
+    SUPPORTED_TEXT_EXTENSIONS = {
+        ".txt", ".log", ".csv", ".py", ".js", ".ts", ".html",
+        ".xml", ".yaml", ".yml", ".ini", ".env", ".rst"
+    }
+
+    def __init__(
+        self,
+        path: str,
+        glob: str = "**/*",
+        recursive: bool = True,
+        silent_errors: bool = False,
+        loader_cls: Optional[Any] = None
+    ):
+        self.path = path
+        self.glob = glob
+        self.recursive = recursive
+        self.silent_errors = silent_errors
+        self.loader_cls = loader_cls
+
+    def load(self) -> List[Document]:
+        import glob as _glob
+        if not os.path.exists(self.path):
+            raise FileNotFoundError(f"Directory not found: {self.path}")
+
+        pattern = os.path.join(self.path, self.glob)
+        matched_files = _glob.glob(pattern, recursive=self.recursive)
+        docs: List[Document] = []
+
+        for fpath in sorted(matched_files):
+            if not os.path.isfile(fpath):
+                continue
+            ext = os.path.splitext(fpath)[1].lower()
+            try:
+                if self.loader_cls is not None:
+                    loader: BaseLoader = self.loader_cls(fpath)
+                elif ext in (".md", ".markdown"):
+                    loader = MarkdownLoader(fpath)
+                elif ext == ".json":
+                    loader = JSONLoader(fpath)
+                elif ext in self.SUPPORTED_TEXT_EXTENSIONS:
+                    loader = TextLoader(fpath)
+                else:
+                    # Skip unrecognized/binary extensions when loader_cls is not specified
+                    continue
+                docs.extend(loader.load())
+            except Exception as ex:
+                if not self.silent_errors:
+                    raise RuntimeError(f"Error loading {fpath}: {ex}") from ex
+        return docs
+
+def format_docs(docs: Sequence[Document], separator: str = "\n\n") -> str:
+    """Utility formatter assembling a list of Documents into a single context string."""
+    return separator.join(doc.page_content for doc in docs)

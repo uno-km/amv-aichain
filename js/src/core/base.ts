@@ -80,6 +80,57 @@ export class RunnableSequence<Input = any, Output = any> implements Runnable<Inp
   }
 }
 
+export class RunnablePassthrough<T = any> implements Runnable<T, T> {
+  private fn?: (input: T) => any;
+
+  constructor(fn?: (input: T) => any) {
+    this.fn = fn;
+  }
+
+  async invoke(input: T, options?: any): Promise<T> {
+    if (this.fn) {
+      return await this.fn(input);
+    }
+    return input;
+  }
+
+  pipe<NextOutput>(next: Runnable<T, NextOutput> | ((input: T) => Promise<NextOutput> | NextOutput)): Runnable<T, NextOutput> {
+    return createPipeline([this, next]);
+  }
+}
+
+export class RunnableParallel<Input = any, Output = Record<string, any>> implements Runnable<Input, Output> {
+  steps: Record<string, Runnable>;
+
+  constructor(steps: Record<string, any>) {
+    this.steps = {};
+    for (const [k, v] of Object.entries(steps)) {
+      if (typeof v === "function") {
+        this.steps[k] = new RunnableLambda(v);
+      } else if (typeof v === "object" && v !== null && "invoke" in v) {
+        this.steps[k] = v;
+      } else {
+        throw new TypeError(`RunnableParallel step '${k}' must be runnable or function`);
+      }
+    }
+  }
+
+  async invoke(input: Input, options?: any): Promise<Output> {
+    const keys = Object.keys(this.steps);
+    const promises = keys.map(k => this.steps[k].invoke(input, options));
+    const values = await Promise.all(promises);
+    const result: Record<string, any> = {};
+    for (let i = 0; i < keys.length; i++) {
+      result[keys[i]] = values[i];
+    }
+    return result as Output;
+  }
+
+  pipe<NextOutput>(next: Runnable<Output, NextOutput> | ((input: Output) => Promise<NextOutput> | NextOutput)): Runnable<Input, NextOutput> {
+    return createPipeline([this, next]);
+  }
+}
+
 export function createPipeline(steps: any[]): RunnableSequence {
   const normalized: Runnable[] = [];
   for (const s of steps) {
@@ -89,6 +140,8 @@ export function createPipeline(steps: any[]): RunnableSequence {
       normalized.push(...s.steps);
     } else if (typeof s === "object" && s !== null && "invoke" in s) {
       normalized.push(s);
+    } else if (typeof s === "object" && s !== null) {
+      normalized.push(new RunnableParallel(s));
     } else {
       throw new TypeError(`Cannot compose non-runnable element: ${typeof s}`);
     }

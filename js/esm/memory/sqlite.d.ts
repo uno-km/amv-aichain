@@ -8,6 +8,8 @@
  * ==============================================================================
  */
 import { BaseEmbeddings } from "./embeddings.js";
+import { Runnable } from "../core/base.js";
+import { Document } from "../core/splitters.js";
 export declare function cosineSimilarity(v1: number[], v2: number[]): number;
 export interface VectorItem {
     id: string;
@@ -38,4 +40,19 @@ export declare class MicroVectorStore {
         score: number;
     }>>;
     clear(): void;
+    asRetriever(options?: {
+        k?: number;
+        searchType?: "similarity" | "hybrid";
+    }): VectorStoreRetriever;
+}
+export declare class VectorStoreRetriever implements Runnable<string, Document[]> {
+    vectorstore: MicroVectorStore;
+    k: number;
+    searchType: "similarity" | "hybrid";
+    constructor(vectorstore: MicroVectorStore, options?: {
+        k?: number;
+        searchType?: "similarity" | "hybrid";
+    });
+    invoke(query: string, options?: any): Promise<Document[]>;
+    pipe<NextOutput>(next: Runnable<Document[], NextOutput> | ((input: Document[]) => Promise<NextOutput> | NextOutput)): Runnable<string, NextOutput>;
 }
