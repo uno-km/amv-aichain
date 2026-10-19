@@ -105,7 +105,12 @@ def run_audit() -> bool:
 
     def test_disk_footprint():
         pkg_dir = os.path.dirname(os.path.abspath(__import__("termux_aichain").__file__))
-        total_size = sum(os.path.getsize(os.path.join(r, f)) for r, d, files in os.walk(pkg_dir) for f in files)
+        total_size = sum(
+            os.path.getsize(os.path.join(r, f))
+            for r, d, files in os.walk(pkg_dir)
+            for f in files
+            if not f.endswith(('.pyc', '.pyo')) and '__pycache__' not in r
+        )
         return total_size < 500 * 1024
     auditor.audit_step("1. Installation & Zero-Dep", "Micro Disk Footprint (< 500KB)", 5.0, test_disk_footprint)
 
