@@ -140,7 +140,7 @@ export class CompiledGraph<T = Record<string, any>> {
 
       for (const { res } of results) {
         if (res && typeof res === "object") {
-          currentState = mergeState(currentState, res);
+          currentState = mergeState(currentState as any, res as any) as unknown as T;
         }
       }
 
@@ -195,7 +195,7 @@ export class CompiledGraph<T = Record<string, any>> {
 
       for (const { res } of results) {
         if (res && typeof res === "object") {
-          currentState = mergeState(currentState, res);
+          currentState = mergeState(currentState as any, res as any) as unknown as T;
         }
       }
       yield [activeNodes, currentState];
