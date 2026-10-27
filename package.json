@@ -1,5 +1,5 @@
 {
-  "name": "termux-aichain",
+  "name": "amv-aichain",
   "version": "1.3.0",
   "description": "Zero-dependency AI chaining and autonomous agent framework utilizing device resources for Node.js ESM and Android Termux",
   "type": "module",
