@@ -31,9 +31,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/uno-km/termux-aichain"
-Repository = "https://github.com/uno-km/termux-aichain.git"
-Issues = "https://github.com/uno-km/termux-aichain/issues"
+Homepage = "https://github.com/uno-km/amv-aichain"
+Repository = "https://github.com/uno-km/amv-aichain.git"
+Issues = "https://github.com/uno-km/amv-aichain/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
@@ -43,8 +43,8 @@ include = ["termux_aichain*"]
 pythonpath = ["."]
 testpaths = ["tests"]
 [project.scripts]
-termux-aichain = "termux_aichain.cli:main"
+amv-aichain = "termux_aichain.cli:main"
 
 [project.entry-points."ameva.components"]
-termux-aichain = "termux_aichain.adapter:create_adapter"
+amv-aichain = "termux_aichain.adapter:create_adapter"
 

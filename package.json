@@ -42,10 +42,10 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/uno-km/termux-aichain.git"
+    "url": "git+https://github.com/uno-km/amv-aichain.git"
   },
   "bugs": {
-    "url": "https://github.com/uno-km/termux-aichain/issues"
+    "url": "https://github.com/uno-km/amv-aichain/issues"
   },
   "homepage": "https://uno-km.vercel.app/lib/aichain/",
   "devDependencies": {
