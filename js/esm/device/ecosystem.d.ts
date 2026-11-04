@@ -4,15 +4,15 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Device Ecosystem: Integrations with uno-km Edge Projects (TS ESM)
+ * amv-aichain Device Ecosystem: Integrations with uno-km Edge Projects (TS ESM)
  * ==============================================================================
  * Provides standard Tool interfaces for uno-km sovereign edge modules:
- * - termux-bitnet (1.58-bit On-Device LLM)
- * - termux-stt (Speech-to-Text)
- * - termux-diffusion (Device Resource-based Image Generation)
- * - termux-playwright (Headless Browser Automation)
- * - termux-tts (DSP / ONNX Neural & Native Voice Synthesis)
- * - termux-vision (On-Device Computer Vision & VLM Multimodal Engine)
+ * - amv-bitnet (1.58-bit On-Device LLM)
+ * - amv-stt (Speech-to-Text)
+ * - amv-diffusion (Device Resource-based Image Generation)
+ * - amv-playwright (Headless Browser Automation)
+ * - amv-tts (DSP / ONNX Neural & Native Voice Synthesis)
+ * - amv-vision (On-Device Computer Vision & VLM Multimodal Engine)
  * Zero external heavy dependencies - Pure Node.js 18+ standard library.
  */
 import { Tool } from "../graph/agent.js";

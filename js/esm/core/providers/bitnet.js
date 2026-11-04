@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Core Engine: BitNet 1-Bit LLM Provider Adapter (TypeScript ESM)
+ * amv-aichain Core Engine: BitNet 1-Bit LLM Provider Adapter (TypeScript ESM)
  * ==============================================================================
  */
 import { OpenAICompatibleChat } from "./openai_compatible.js";

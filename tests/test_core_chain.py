@@ -1,13 +1,13 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-Unit tests for termux_aichain.core.base (Runnable, Pipe, Sequence)
+Unit tests for amv_aichain.core.base (Runnable, Pipe, Sequence)
 """
 import pytest
 import asyncio
-from termux_aichain.core.base import Runnable, RunnableLambda, RunnableSequence
-from termux_aichain.core.prompt import PromptTemplate
-from termux_aichain.core.parsers import StringOutputParser
+from amv_aichain.core.base import Runnable, RunnableLambda, RunnableSequence
+from amv_aichain.core.prompt import PromptTemplate
+from amv_aichain.core.parsers import StringOutputParser
 
 def test_runnable_pipe_operator():
     step1 = RunnableLambda(lambda x: f"hello {x}")

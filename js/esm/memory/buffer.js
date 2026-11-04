@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Memory Engine: ConversationBufferMemory (TypeScript ESM)
+ * amv-aichain Memory Engine: ConversationBufferMemory (TypeScript ESM)
  * ==============================================================================
  */
 import { HumanMessage, AIMessage } from "../core/schema.js";

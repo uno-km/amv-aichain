@@ -3,7 +3,7 @@
 import os
 import time
 import pytest
-from termux_aichain import (
+from amv_aichain import (
     LocalAgent,
     ConnectConfig,
     ManagedConfig,
@@ -22,8 +22,8 @@ from termux_aichain import (
     ToolRateLimitExceededError,
     NativeBackendUnavailableError
 )
-from termux_aichain.core.base import BaseChatModel
-from termux_aichain.core.schema import AIMessage, GenerationResult
+from amv_aichain.core.base import BaseChatModel
+from amv_aichain.core.schema import AIMessage, GenerationResult
 
 class RuleBasedModel(BaseChatModel):
     def generate(self, messages):

@@ -3,14 +3,14 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="termux-aichain",
+    name="amv-aichain",
     version="1.1.4",
     description="Ultra-lightweight Zero-Dependency AI chaining & agent framework for Termux, Android and Edge computing.",
     long_description=open("README.md", encoding="utf-8").read() if open("README.md", encoding="utf-8") else "",
     long_description_content_type="text/markdown",
     author="UnoKim",
     author_email="uno-km@users.noreply.github.com",
-    url="https://github.com/uno-km/termux-aichain",
+    url="https://github.com/uno-km/amv-aichain",
     packages=find_packages(),
     python_requires=">=3.10",
     install_requires=[

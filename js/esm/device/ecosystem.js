@@ -4,15 +4,15 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Device Ecosystem: Integrations with uno-km Edge Projects (TS ESM)
+ * amv-aichain Device Ecosystem: Integrations with uno-km Edge Projects (TS ESM)
  * ==============================================================================
  * Provides standard Tool interfaces for uno-km sovereign edge modules:
- * - termux-bitnet (1.58-bit On-Device LLM)
- * - termux-stt (Speech-to-Text)
- * - termux-diffusion (Device Resource-based Image Generation)
- * - termux-playwright (Headless Browser Automation)
- * - termux-tts (DSP / ONNX Neural & Native Voice Synthesis)
- * - termux-vision (On-Device Computer Vision & VLM Multimodal Engine)
+ * - amv-bitnet (1.58-bit On-Device LLM)
+ * - amv-stt (Speech-to-Text)
+ * - amv-diffusion (Device Resource-based Image Generation)
+ * - amv-playwright (Headless Browser Automation)
+ * - amv-tts (DSP / ONNX Neural & Native Voice Synthesis)
+ * - amv-vision (On-Device Computer Vision & VLM Multimodal Engine)
  * Zero external heavy dependencies - Pure Node.js 18+ standard library.
  */
 import { execFile } from "node:child_process";
@@ -29,7 +29,7 @@ async function safeExec(cmd, args = [], timeout = 30000) {
     }
 }
 export const inferBitnetLlm = tool({
-    name: "termux_bitnet_infer",
+    name: "amv_bitnet_infer",
     description: "Invokes on-device 1.58-bit BitNet LLM engine for fast local text generation.",
     parameters: {
         type: "object",
@@ -43,7 +43,7 @@ export const inferBitnetLlm = tool({
     const prompt = args?.prompt ?? "";
     const maxTokens = args?.max_tokens ?? 128;
     try {
-        return await safeExec("termux-bitnet", ["--prompt", prompt, "--n-predict", String(maxTokens)], 45000);
+        return await safeExec("amv-bitnet", ["--prompt", prompt, "--n-predict", String(maxTokens)], 45000);
     }
     catch (err) {
         return JSON.stringify({
@@ -53,7 +53,7 @@ export const inferBitnetLlm = tool({
     }
 });
 export const transcribeSpeech = tool({
-    name: "termux_stt_transcribe",
+    name: "amv_stt_transcribe",
     description: "Transcribes live microphone audio or audio files to text using local device STT engine.",
     parameters: {
         type: "object",
@@ -67,7 +67,7 @@ export const transcribeSpeech = tool({
     const duration = args?.duration_sec ?? 5;
     const cmdArgs = args?.audio_path ? ["--input", args.audio_path] : ["--duration", String(duration)];
     try {
-        return await safeExec("termux-stt", cmdArgs, (duration + 15) * 1000);
+        return await safeExec("amv-stt", cmdArgs, (duration + 15) * 1000);
     }
     catch (err) {
         return JSON.stringify({
@@ -77,7 +77,7 @@ export const transcribeSpeech = tool({
     }
 });
 export const generateDiffusionImage = tool({
-    name: "termux_diffusion_generate",
+    name: "amv_diffusion_generate",
     description: "Generates an image from a text prompt using available mobile device resources (CPU/GPU).",
     parameters: {
         type: "object",
@@ -91,7 +91,7 @@ export const generateDiffusionImage = tool({
     const prompt = args?.prompt ?? "";
     const outPath = args?.output_path ?? "/tmp/output.png";
     try {
-        return await safeExec("termux-diffusion", ["--prompt", prompt, "--output", outPath], 60000);
+        return await safeExec("amv-diffusion", ["--prompt", prompt, "--output", outPath], 60000);
     }
     catch (err) {
         return JSON.stringify({
@@ -101,7 +101,7 @@ export const generateDiffusionImage = tool({
     }
 });
 export const browseWebHeadless = tool({
-    name: "termux_playwright_browse",
+    name: "amv_playwright_browse",
     description: "Automates headless mobile web browser to extract text content or search results from target URL.",
     parameters: {
         type: "object",
@@ -117,7 +117,7 @@ export const browseWebHeadless = tool({
     if (args?.query)
         cmdArgs.push("--query", args.query);
     try {
-        return await safeExec("termux-playwright", cmdArgs, 30000);
+        return await safeExec("amv-playwright", cmdArgs, 30000);
     }
     catch (err) {
         return JSON.stringify({
@@ -127,7 +127,7 @@ export const browseWebHeadless = tool({
     }
 });
 export const synthesizeSpeech = tool({
-    name: "termux_tts_synth",
+    name: "amv_tts_synth",
     description: "Synthesizes text into high-quality WAV audio file using on-device DSP or ONNX neural vocoder.",
     parameters: {
         type: "object",
@@ -148,7 +148,7 @@ export const synthesizeSpeech = tool({
     const engine = args?.engine ?? "auto";
     const cmdArgs = ["synth", "-t", text, "-o", outPath, "-l", lang, "-s", speed, "-e", engine];
     try {
-        return await safeExec("termux-tts", cmdArgs, 45000);
+        return await safeExec("amv-tts", cmdArgs, 45000);
     }
     catch (err) {
         return JSON.stringify({
@@ -175,7 +175,7 @@ export const speakText = tool({
     const stream = args?.stream ?? "MUSIC";
     const cmdArgs = ["speak", "-t", text, "-l", lang, "-s", stream];
     try {
-        return await safeExec("termux-tts", cmdArgs, 30000);
+        return await safeExec("amv-tts", cmdArgs, 30000);
     }
     catch (err) {
         return JSON.stringify({
@@ -185,7 +185,7 @@ export const speakText = tool({
     }
 });
 export const analyzeImageVlm = tool({
-    name: "termux_vision_vlm",
+    name: "amv_vision_vlm",
     description: "Analyzes and describes an image or answers questions about an image using on-device Vision-Language Model (VLM).",
     parameters: {
         type: "object",
@@ -203,7 +203,7 @@ export const analyzeImageVlm = tool({
     if (args?.model)
         cmdArgs.push("-m", args.model);
     try {
-        return await safeExec("termux-vision", cmdArgs, 60000);
+        return await safeExec("amv-vision", cmdArgs, 60000);
     }
     catch (err) {
         return JSON.stringify({
@@ -213,7 +213,7 @@ export const analyzeImageVlm = tool({
     }
 });
 export const detectFaces = tool({
-    name: "termux_vision_detect_face",
+    name: "amv_vision_detect_face",
     description: "Detects faces in an image using on-device Haar cascade detector and extracts the cropped face.",
     parameters: {
         type: "object",
@@ -228,7 +228,7 @@ export const detectFaces = tool({
     const outPath = args?.output_path ?? "/tmp/face_crop.jpg";
     const cmdArgs = ["detect-face", imgPath, "-o", outPath];
     try {
-        return await safeExec("termux-vision", cmdArgs, 30000);
+        return await safeExec("amv-vision", cmdArgs, 30000);
     }
     catch (err) {
         return JSON.stringify({
@@ -238,7 +238,7 @@ export const detectFaces = tool({
     }
 });
 export const detectEdgesCanny = tool({
-    name: "termux_vision_canny",
+    name: "amv_vision_canny",
     description: "Applies on-device 5-stage Canny Edge Detection to an image.",
     parameters: {
         type: "object",
@@ -257,7 +257,7 @@ export const detectEdgesCanny = tool({
     const high = String(args?.high ?? 120.0);
     const cmdArgs = ["canny", imgPath, "-o", outPath, "--low", low, "--high", high];
     try {
-        return await safeExec("termux-vision", cmdArgs, 30000);
+        return await safeExec("amv-vision", cmdArgs, 30000);
     }
     catch (err) {
         return JSON.stringify({

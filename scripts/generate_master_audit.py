@@ -3,13 +3,13 @@
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
 ==============================================================================
-termux-aichain Master Audit Generator (scripts/generate_master_audit.py)
+amv-aichain Master Audit Generator (scripts/generate_master_audit.py)
 ==============================================================================
 Deterministic, byte-verified audit report and full-source extractor.
 Executes test suites, verifies zero-drift TypeScript builds, computes SHA-256
 manifests of tracked source files at Source Commit Tested (excluding generated
 artifacts to prevent recursive self-hashing), and compiles
-termux_aichain_full_source_report.md.
+amv_aichain_full_source_report.md.
 """
 
 from __future__ import annotations
@@ -32,7 +32,7 @@ BINARY_EXTENSIONS = {
 }
 
 EXCLUDED_FROM_SOURCE_MANIFEST = {
-    "termux_aichain_full_source_report.md",
+    "amv_aichain_full_source_report.md",
     "artifacts/pytest.xml",
     "artifacts/pytest-console.txt",
     "artifacts/node-tests.tap",
@@ -297,13 +297,13 @@ def generate_report():
     (artifacts_dir / "audit-summary.json").write_text(json.dumps(audit_summary, indent=2), encoding="utf-8")
 
     doc_lines: List[str] = []
-    doc_lines.append("# termux-aichain Master Audit & Full Source Code Report")
+    doc_lines.append("# amv-aichain Master Audit & Full Source Code Report")
     doc_lines.append("")
     doc_lines.append("## 1. Executive Summary & Verification Subject")
     doc_lines.append("")
     doc_lines.append("| Metric | Value |")
     doc_lines.append("| :--- | :--- |")
-    doc_lines.append(f"| **Release Package** | `termux-aichain v1.0.12rc1` (PyPI) / `v1.0.12-rc.1` (npm) |")
+    doc_lines.append(f"| **Release Package** | `amv-aichain v1.0.12rc1` (PyPI) / `v1.0.12-rc.1` (npm) |")
     doc_lines.append(f"| **Source Commit Tested** | `{evidence['source_commit_tested']}` |")
     doc_lines.append(f"| **Source Tree Tested** | `{evidence['source_tree_tested']}` |")
     doc_lines.append(f"| **Working Tree State at Test** | `{'CLEAN' if evidence['working_tree_clean_at_test'] else 'DIRTY'}` |")
@@ -352,7 +352,7 @@ def generate_report():
     doc_lines.append("### Architecture & Compliance Alignment")
     doc_lines.append("1. **TypeScript SSOT & ESM Synchronization**: All security updates (ToolPolicy, loopback CORS, real-device sysfs fallback, fail-closed verifier) backported to `js/src/**/*.ts` with automated `npm run build` and `git diff --exit-code -- js/esm` zero-drift verification.")
     doc_lines.append("2. **Python `create_react_agent` Tool Policy**: Direct graph API now enforces `ToolPolicy(default='deny')` and user approval callbacks, establishing security parity with Node.js.")
-    doc_lines.append("3. **Unified Version SSOT**: Package metadata unified across `pyproject.toml` (`1.0.12rc1`), `termux_aichain/__init__.py` (`1.0.12rc1`), `setup.py` (`1.0.12rc1`), and `package.json` (`1.0.12-rc.1`).")
+    doc_lines.append("3. **Unified Version SSOT**: Package metadata unified across `pyproject.toml` (`1.0.12rc1`), `amv_aichain/__init__.py` (`1.0.12rc1`), `setup.py` (`1.0.12rc1`), and `package.json` (`1.0.12-rc.1`).")
     doc_lines.append("4. **README Encoding Remediation**: ASCII art banner and UTF-8 emojis restored with zero mojibake corruption.")
     doc_lines.append("5. **Self-Hashing Exclusion Policy**: Explicitly declared exclusion of generated report and test artifacts to maintain cryptographic determinism.")
     doc_lines.append("")
@@ -394,7 +394,7 @@ def generate_report():
         doc_lines.append(f"{fence}")
         doc_lines.append("")
 
-    report_path = REPO_ROOT / "termux_aichain_full_source_report.md"
+    report_path = REPO_ROOT / "amv_aichain_full_source_report.md"
     report_text = "\n".join(doc_lines)
     report_path.write_text(report_text, encoding="utf-8")
     print(f"[+] Master Audit Report written to {report_path} ({len(report_text):,} bytes)")

@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Core Prompt Templates
+ * amv-aichain Core Prompt Templates
  * ==============================================================================
  */
 import { SystemMessage, HumanMessage, AIMessage } from "./schema.js";

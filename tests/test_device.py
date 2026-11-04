@@ -1,11 +1,11 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-Unit tests for termux_aichain.device (Termux Android hardware tools)
+Unit tests for amv_aichain.device (Termux Android hardware tools)
 """
 import json
 import pytest
-from termux_aichain.device.tools import (
+from amv_aichain.device.tools import (
     get_battery_status,
     get_sensor_data,
     get_device_location,

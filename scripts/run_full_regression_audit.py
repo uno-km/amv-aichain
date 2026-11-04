@@ -9,7 +9,7 @@ import math
 from typing import Callable, Tuple
 
 sys.path.insert(0, os.path.abspath("."))
-sys.path.insert(0, os.path.abspath("termux_aichain"))
+sys.path.insert(0, os.path.abspath("amv_aichain"))
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -21,7 +21,7 @@ class RegressionAuditor:
         self.results = []
         self.start_time = time.time()
         print("=" * 80)
-        print(f"[*] termux-aichain Microscopic Regression Audit [{time.strftime('%Y-%m-%d %H:%M:%S')}]")
+        print(f"[*] amv-aichain Microscopic Regression Audit [{time.strftime('%Y-%m-%d %H:%M:%S')}]")
         print("=" * 80)
         print("Zero-Point Baseline: Initial Score = 0.0 / 100.0 pts\n")
 
@@ -99,12 +99,12 @@ def run_audit() -> bool:
 
     # --- Category 1: Installation & Zero-Dep (15.0 pts) ---
     def test_zero_dep_imports():
-        import termux_aichain
-        return hasattr(termux_aichain, "__version__") and isinstance(termux_aichain.__version__, str)
+        import amv_aichain
+        return hasattr(amv_aichain, "__version__") and isinstance(amv_aichain.__version__, str)
     auditor.audit_step("1. Installation & Zero-Dep", "Zero-Dep Standard Imports & Version Schema", 5.0, test_zero_dep_imports)
 
     def test_disk_footprint():
-        pkg_dir = os.path.dirname(os.path.abspath(__import__("termux_aichain").__file__))
+        pkg_dir = os.path.dirname(os.path.abspath(__import__("amv_aichain").__file__))
         total_size = sum(
             os.path.getsize(os.path.join(r, f))
             for r, d, files in os.walk(pkg_dir)
@@ -115,7 +115,7 @@ def run_audit() -> bool:
     auditor.audit_step("1. Installation & Zero-Dep", "Micro Disk Footprint (< 500KB)", 5.0, test_disk_footprint)
 
     def test_schema_integrity():
-        from termux_aichain import HumanMessage, AIMessage, GenerationResult, UsageInfo
+        from amv_aichain import HumanMessage, AIMessage, GenerationResult, UsageInfo
         h = HumanMessage("Hello")
         a = AIMessage("World")
         res = GenerationResult(content="Test", usage=UsageInfo(10, 20, 30, 1.5), message=a)
@@ -124,7 +124,7 @@ def run_audit() -> bool:
 
     # --- Category 2: Core Engine & Chaining (15.0 pts) ---
     def test_pipe_composition():
-        from termux_aichain import PromptTemplate, JsonOutputParser
+        from amv_aichain import PromptTemplate, JsonOutputParser
         prompt = PromptTemplate.from_template("Format JSON: {task}")
         chain = prompt | (lambda s: '```json\n{"task_done": true}\n```') | JsonOutputParser()
         out = chain.invoke({"task": "audit"})
@@ -132,21 +132,21 @@ def run_audit() -> bool:
     auditor.audit_step("2. Core Engine & Chaining", "Pipe Composition (|) & Json Parser", 5.0, test_pipe_composition)
 
     def test_recursive_splitter():
-        from termux_aichain import RecursiveCharacterTextSplitter, Document
+        from amv_aichain import RecursiveCharacterTextSplitter, Document
         splitter = RecursiveCharacterTextSplitter(chunk_size=50, chunk_overlap=10)
         docs = splitter.split_documents([Document(page_content="A" * 200)])
         return len(docs) >= 4 and all(len(d.page_content) <= 50 for d in docs)
     auditor.audit_step("2. Core Engine & Chaining", "Recursive Text Splitter Hierarchy", 5.0, test_recursive_splitter)
 
     def test_prompt_template_escapes():
-        from termux_aichain import PromptTemplate
+        from amv_aichain import PromptTemplate
         tpl = PromptTemplate.from_template("Escaped {{brace}} and var {v}")
         return tpl.format(v="ok") == "Escaped {brace} and var ok"
     auditor.audit_step("2. Core Engine & Chaining", "PromptTemplate Literal Escaping", 5.0, test_prompt_template_escapes)
 
     # --- Category 3: Graph & State Machine (15.0 pts) ---
     def test_state_graph_loop():
-        from termux_aichain import StateGraph, START, END
+        from amv_aichain import StateGraph, START, END
         workflow = StateGraph()
         workflow.add_node("inc", lambda s: {"n": s.get("n", 0) + 1})
         workflow.set_entry_point("inc")
@@ -157,8 +157,8 @@ def run_audit() -> bool:
     auditor.audit_step("3. Graph & State Machine", "Cyclic StateGraph Dynamic Routing", 7.5, test_state_graph_loop)
 
     def test_react_agent():
-        from termux_aichain import create_react_agent, Tool, tool, HumanMessage, AIMessage, GenerationResult, UsageInfo
-        from termux_aichain.core.base import BaseChatModel
+        from amv_aichain import create_react_agent, Tool, tool, HumanMessage, AIMessage, GenerationResult, UsageInfo
+        from amv_aichain.core.base import BaseChatModel
         class RuleBasedTransitionModel(BaseChatModel):
             def __init__(self):
                 self.called = False
@@ -182,7 +182,7 @@ def run_audit() -> bool:
 
     # --- Category 4: Memory & Vector Store (15.0 pts) ---
     def test_buffer_memory():
-        from termux_aichain import ConversationBufferMemory
+        from amv_aichain import ConversationBufferMemory
         mem = ConversationBufferMemory(k=1)
         mem.save_context("q1", "a1")
         mem.save_context("q2", "a2")
@@ -191,14 +191,14 @@ def run_audit() -> bool:
     auditor.audit_step("4. Memory & Vector Store", "Rolling ConversationBuffer Window", 5.0, test_buffer_memory)
 
     def test_sqlite_entity_memory():
-        from termux_aichain import SQLiteEntityMemory
+        from amv_aichain import SQLiteEntityMemory
         mem = SQLiteEntityMemory(":memory:")
         mem.set("sovereign_flag", "true")
         return str(mem.get("sovereign_flag")).lower() == "true"
     auditor.audit_step("4. Memory & Vector Store", "SQLite Entity Memory ACID Persistence", 5.0, test_sqlite_entity_memory)
 
     def test_sqlite_vector_cosine():
-        from termux_aichain import SQLiteVectorStore
+        from amv_aichain import SQLiteVectorStore
         vstore = SQLiteVectorStore(":memory:")
         vstore.add_texts(["Edge", "Cloud"], [[1.0, 0.0], [0.0, 1.0]])
         results = vstore.similarity_search_by_vector([0.99, 0.01], k=1)
@@ -207,7 +207,7 @@ def run_audit() -> bool:
 
     # --- Category 5: Serve Engine & Live Dashboard UI (15.0 pts) ---
     def test_serve_http_and_dashboard():
-        from termux_aichain import PromptTemplate, AgentServer
+        from amv_aichain import PromptTemplate, AgentServer
         import urllib.request
         prompt = PromptTemplate.from_template("Serve: {input}")
         server = AgentServer(prompt, host="127.0.0.1", port=0, quiet=True)
@@ -217,7 +217,7 @@ def run_audit() -> bool:
         try:
             with urllib.request.urlopen(f"http://127.0.0.1:{port}/ui") as r:
                 html = r.read().decode("utf-8")
-                ui_ok = "<!DOCTYPE html>" in html and "termux-aichain" in html
+                ui_ok = "<!DOCTYPE html>" in html and "amv-aichain" in html
             with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/traces") as r:
                 traces = json.loads(r.read().decode("utf-8"))
                 trace_ok = len(traces) >= 1 and traces[0]["name"] == "AuditSpan"
@@ -228,7 +228,7 @@ def run_audit() -> bool:
 
     # --- Category 6: Device Hardware & uno-km Ecosystem (15.0 pts) ---
     def test_hardware_tools():
-        from termux_aichain import get_battery_status, get_sensor_data, get_device_location
+        from amv_aichain import get_battery_status, get_sensor_data, get_device_location
         b = get_battery_status()
         s = get_sensor_data("accel")
         l = get_device_location("last")
@@ -236,7 +236,7 @@ def run_audit() -> bool:
     auditor.audit_step("6. Device & Ecosystem Tools", "Native Hardware Tooling (Battery, Sensors, GPS)", 7.5, test_hardware_tools)
 
     def test_ecosystem_tools():
-        from termux_aichain import transcribe_speech, generate_diffusion_image, browse_web_headless
+        from amv_aichain import transcribe_speech, generate_diffusion_image, browse_web_headless
         stt = transcribe_speech(duration_sec=1)
         diff = generate_diffusion_image(prompt="Audit", output_path="/tmp/test.png")
         web = browse_web_headless(url="http://example.com")
@@ -245,7 +245,7 @@ def run_audit() -> bool:
 
     # --- Category 7: Local Server Fine-Tuning & Multi-Model Spectrum (10.0 pts) ---
     def test_local_server_tuning():
-        from termux_aichain import LocalServerConfig, LlamaCppServer, OpenAICompatibleChat, HumanMessage
+        from amv_aichain import LocalServerConfig, LlamaCppServer, OpenAICompatibleChat, HumanMessage
         config = LocalServerConfig(
             model_path="/path/to/model.gguf",
             threads=4,

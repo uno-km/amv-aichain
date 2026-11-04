@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Graph Engine: StateGraph & Cyclic State Machine (TypeScript ESM)
+ * amv-aichain Graph Engine: StateGraph & Cyclic State Machine (TypeScript ESM)
  * ==============================================================================
  */
 export declare const START = "__start__";

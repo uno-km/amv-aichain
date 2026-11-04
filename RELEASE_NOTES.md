@@ -1,3 +1,15 @@
+# v2.0.0 (2026-11-04) — Python import name follows the amv-aichain package name
+
+### Changed
+- The Python package is now `amv_aichain` (previously `termux_aichain`). Code, CLI entry points, scripts, docs and cross-package references use the amv-* names.
+- `import termux_aichain` keeps working through a deprecated alias that returns the same module objects and emits a `DeprecationWarning`. The alias will be removed in a future major release.
+
+### Unchanged
+- On-disk cache and data directories (for example `~/.cache/termux-*`) keep their names, so models already downloaded on devices stay in use.
+- Termux platform commands (`termux-tts-speak`, `termux-wake-lock`, `termux-api`, ...) keep their names.
+
+---
+
 # v1.2.0 (2026-10-13) — Fail-Fast Zero-Silent-Exception & ameva-runtime v2 Integration
 
 Eliminated all silent exception handlers across 136 unit tests, migrated hardware acceleration to ameva-runtime v2, and integrated cluster orchestrator adapter.

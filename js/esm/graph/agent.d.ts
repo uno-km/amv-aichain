@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Graph Engine: ReAct Agent (TypeScript ESM)
+ * amv-aichain Graph Engine: ReAct Agent (TypeScript ESM)
  * ==============================================================================
  */
 import { BaseChatModel } from "../core/base.js";

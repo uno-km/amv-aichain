@@ -1,11 +1,11 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-Unit tests for termux_aichain Sovereign Facade API & Progressive Disclosure UX
+Unit tests for amv_aichain Sovereign Facade API & Progressive Disclosure UX
 """
 import pytest
 import unittest.mock
-from termux_aichain import LocalAgent, HumanMessage, AIMessage
+from amv_aichain import LocalAgent, HumanMessage, AIMessage
 
 def test_local_agent_default_constructor(monkeypatch):
     class FakeChat:
@@ -30,7 +30,7 @@ def test_local_agent_connect_factory(monkeypatch):
     class FakeResp:
         status = 200
         def read(self, limit):
-            return b'{"status": "ok", "service": "termux-aichain", "protocolVersion": "1.0"}'
+            return b'{"status": "ok", "service": "amv-aichain", "protocolVersion": "1.0"}'
         def __enter__(self): return self
         def __exit__(self, *args): pass
 

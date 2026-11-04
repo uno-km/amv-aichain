@@ -24,7 +24,7 @@ import {
 
 async function main() {
   console.log("==============================================================================");
-  console.log("[AUDIT] @termux-ai/chain Node.js ESM Full Regression Suite");
+  console.log("[AUDIT] amv-aichain Node.js ESM Full Regression Suite");
   console.log("==============================================================================");
   
   const tracer = new Tracer("NodeRegressionAudit");

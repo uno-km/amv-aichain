@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Memory Engine: In-Memory & Cosine Vector Store (TypeScript ESM)
+ * amv-aichain Memory Engine: In-Memory & Cosine Vector Store (TypeScript ESM)
  * ==============================================================================
  */
 

@@ -7,13 +7,13 @@ and robust boundary condition handling (zero vectors, NaN/Inf, dimension mismatc
 from __future__ import annotations
 import math
 import pytest
-from termux_aichain.memory.simd import (
+from amv_aichain.memory.simd import (
     py_cosine_similarity,
     NativeVectorEngine,
     get_simd_engine,
 )
-from termux_aichain.memory.sqlite import SQLiteVectorStore
-from termux_aichain.memory.embeddings import SparseBM25Embeddings
+from amv_aichain.memory.sqlite import SQLiteVectorStore
+from amv_aichain.memory.embeddings import SparseBM25Embeddings
 
 
 def test_cosine_similarity_basic():

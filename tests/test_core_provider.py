@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-Unit tests for termux_aichain.core.providers.openai_compatible (using standard HTTP Server)
+Unit tests for amv_aichain.core.providers.openai_compatible (using standard HTTP Server)
 """
 import json
 import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import pytest
-from termux_aichain.core.providers.openai_compatible import OpenAICompatibleChat
-from termux_aichain.core.schema import HumanMessage, SystemMessage
+from amv_aichain.core.providers.openai_compatible import OpenAICompatibleChat
+from amv_aichain.core.schema import HumanMessage, SystemMessage
 
 class LocalTestOpenAIServer(BaseHTTPRequestHandler):
     def do_POST(self):

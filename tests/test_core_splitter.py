@@ -1,12 +1,12 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-Unit tests for termux_aichain.core.splitters
+Unit tests for amv_aichain.core.splitters
 """
 import os
 import tempfile
 import pytest
-from termux_aichain.core.splitters import RecursiveCharacterTextSplitter, CharacterTextSplitter, Document, TextLoader
+from amv_aichain.core.splitters import RecursiveCharacterTextSplitter, CharacterTextSplitter, Document, TextLoader
 
 def test_character_text_splitter():
     splitter = CharacterTextSplitter(separator="\n\n", chunk_size=50, chunk_overlap=10)

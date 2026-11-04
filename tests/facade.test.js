@@ -40,7 +40,7 @@ test("Node.js: verifyServerIdentity contract validation & fail-closed fallback",
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({
         status: "ok",
-        service: "termux-aichain",
+        service: "amv-aichain",
         protocolVersion: "1.0",
         model: { id: "qwen2.5-1.5b" }
       }));
@@ -62,7 +62,7 @@ test("Node.js: verifyServerIdentity contract validation & fail-closed fallback",
   try {
     // 1. Valid handshake
     const res = await verifyServerIdentity(endpoint, {
-      expectedService: "termux-aichain",
+      expectedService: "amv-aichain",
       expectedProtocolVersion: "1.0",
       expectedModelId: "qwen2.5-1.5b"
     });
@@ -91,7 +91,7 @@ test("Node.js: verifyServerIdentity fail-closed on missing model ID without fall
   const server = http.createServer((req, res) => {
     if (req.url === "/health") {
       res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ status: "ok", service: "termux-aichain", protocolVersion: "1.0" }));
+      res.end(JSON.stringify({ status: "ok", service: "amv-aichain", protocolVersion: "1.0" }));
     } else {
       res.writeHead(404);
       res.end();

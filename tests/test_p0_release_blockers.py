@@ -6,7 +6,7 @@ import math
 import json
 import unittest.mock
 import pytest
-from termux_aichain import (
+from amv_aichain import (
     LocalAgent,
     ConnectConfig,
     ManagedConfig,
@@ -33,10 +33,10 @@ from termux_aichain import (
     tool,
     create_react_agent
 )
-from termux_aichain.core.base import BaseChatModel
-from termux_aichain.core.schema import AIMessage, GenerationResult
-from termux_aichain.core.local_agent import validate_loopback_endpoint, ServerIdentityVerifier, NoRedirectHandler
-from termux_aichain.output.normalizer import OutputNormalizer, RawModelResponse, OutputParserPolicy, validate_tool_arguments
+from amv_aichain.core.base import BaseChatModel
+from amv_aichain.core.schema import AIMessage, GenerationResult
+from amv_aichain.core.local_agent import validate_loopback_endpoint, ServerIdentityVerifier, NoRedirectHandler
+from amv_aichain.output.normalizer import OutputNormalizer, RawModelResponse, OutputParserPolicy, validate_tool_arguments
 
 class StaticModel(BaseChatModel):
     def __init__(self, content: str = ""):
@@ -402,7 +402,7 @@ def test_expected_model_id_missing_fails_closed(monkeypatch):
     class FakeNoModelResp:
         status = 200
         def read(self, limit):
-            return b'{"status": "ok", "service": "termux-aichain"}'
+            return b'{"status": "ok", "service": "amv-aichain"}'
         def __enter__(self): return self
         def __exit__(self, *args): pass
 
@@ -416,7 +416,7 @@ def test_expected_model_sha256_missing_fails_closed(monkeypatch):
     class FakeNoChecksumResp:
         status = 200
         def read(self, limit):
-            return b'{"status": "ok", "service": "termux-aichain", "model": {"id": "qwen-2.5-1.5b"}}'
+            return b'{"status": "ok", "service": "amv-aichain", "model": {"id": "qwen-2.5-1.5b"}}'
         def __enter__(self): return self
         def __exit__(self, *args): pass
 
@@ -478,7 +478,7 @@ def test_managed_attached_lifecycle_preserves_external(monkeypatch, tmp_path):
 
 # 33. BoundedRingLog 단일 초대형 로그 행(100KB) 상한 및 바이트 보장 (P0-2)
 def test_ring_log_single_oversized_line_is_bounded():
-    from termux_aichain.core.providers.local_server import BoundedRingLog
+    from amv_aichain.core.providers.local_server import BoundedRingLog
     log = BoundedRingLog(maxlen=200, max_bytes=65536)
     log.append("A" * 100_000)
     assert log._current_bytes <= 65536
@@ -495,7 +495,7 @@ def test_managed_start_failure_preserves_original_error(monkeypatch, tmp_path):
         raise OSError("popen failed to execute binary")
 
     monkeypatch.setattr(
-        "termux_aichain.core.providers.local_server.LocalServerManager.start",
+        "amv_aichain.core.providers.local_server.LocalServerManager.start",
         fail_start,
     )
     with pytest.raises(OSError, match="popen failed to execute binary"):
@@ -506,7 +506,7 @@ def test_managed_start_failure_preserves_original_error(monkeypatch, tmp_path):
 
 # 35. CORS scheme 및 userinfo 엄격 거부 (P1-3)
 def test_cors_scheme_and_userinfo_rejected():
-    from termux_aichain.serve.server import is_allowed_loopback_origin
+    from amv_aichain.serve.server import is_allowed_loopback_origin
     assert is_allowed_loopback_origin("http://localhost:3000") is True
     assert is_allowed_loopback_origin("http://127.0.0.1:8080") is True
     assert is_allowed_loopback_origin("ftp://localhost") is False
@@ -518,10 +518,10 @@ def test_cors_scheme_and_userinfo_rejected():
 # 36. Missing protocolVersion in /health fails closed (P0-3)
 def test_missing_protocol_version_fails_closed(monkeypatch):
     import io
-    from termux_aichain.core.local_agent import ServerIdentityVerifier, ServerProtocolMismatchError
+    from amv_aichain.core.local_agent import ServerIdentityVerifier, ServerProtocolMismatchError
     class FakeHealthResp:
         status = 200
-        def read(self, size): return b'{"status":"ok","service":"termux-aichain"}'
+        def read(self, size): return b'{"status":"ok","service":"amv-aichain"}'
         def __enter__(self): return self
         def __exit__(self, *args): pass
 
@@ -539,10 +539,10 @@ def test_missing_protocol_version_fails_closed(monkeypatch):
 # 37. LocalAgent.local() does not swallow model identity conflict (P0-2)
 def test_local_agent_local_does_not_swallow_model_conflict(monkeypatch, tmp_path):
     import io
-    from termux_aichain.core.local_agent import LocalAgent, DuplicateServerOwnershipError
+    from amv_aichain.core.local_agent import LocalAgent, DuplicateServerOwnershipError
     class FakeHealthResp:
         status = 200
-        def read(self, size): return b'{"status":"ok","service":"termux-aichain","protocolVersion":"1.0","model":{"id":"other-model.gguf"}}'
+        def read(self, size): return b'{"status":"ok","service":"amv-aichain","protocolVersion":"1.0","model":{"id":"other-model.gguf"}}'
         def __enter__(self): return self
         def __exit__(self, *args): pass
 
@@ -562,7 +562,7 @@ def test_local_agent_local_does_not_swallow_model_conflict(monkeypatch, tmp_path
 # 38. LocalAgent.local() missing model raises FileNotFoundError (P0-2)
 def test_local_agent_local_missing_model_raises_file_not_found(monkeypatch):
     import urllib.error
-    from termux_aichain.core.local_agent import LocalAgent
+    from amv_aichain.core.local_agent import LocalAgent
     class FailingOpener:
         def open(self, *args, **kwargs): raise urllib.error.URLError("connection refused")
 
@@ -572,7 +572,7 @@ def test_local_agent_local_missing_model_raises_file_not_found(monkeypatch):
 
 # 39. cmd_run rejects user-specified non-GGUF file (P1-3)
 def test_cmd_run_rejects_non_gguf_user_file(tmp_path, capsys):
-    from termux_aichain.cli import cmd_run
+    from amv_aichain.cli import cmd_run
     bad_file = tmp_path / "malicious.bin"
     bad_file.write_bytes(b"NOT_A_GGUF_HEADER")
     cmd_run(str(bad_file))

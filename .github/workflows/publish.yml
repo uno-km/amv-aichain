@@ -71,4 +71,4 @@ jobs:
           generate_release_notes: false
           files: |
             dist/*
-            termux-aichain-*.tgz
+            amv-aichain-*.tgz

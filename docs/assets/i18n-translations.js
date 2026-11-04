@@ -7,7 +7,7 @@ if (window.i18nManager) {
   window.i18nManager.registerTranslations({
   "en": {
     "common": {
-      "brand": "termux-aichain",
+      "brand": "amv-aichain",
       "releaseTag": "v1.0.0 (Sovereign Multimodal Edge Release)",
       "pypiBtn": "PyPI (pip)",
       "npmBtn": "npm (Node.js)",
@@ -29,7 +29,7 @@ if (window.i18nManager) {
       }
     },
     "home": {
-      "title": "termux-aichain",
+      "title": "amv-aichain",
       "subtitle": "Sovereign Zero-Dependency Multimodal AI Framework for Android Edge & Termux",
       "quickInstallTitle": "1-Line Quick Installation",
       "quickInstallDesc": "Install the official package directly into your runtime:",
@@ -77,7 +77,7 @@ if (window.i18nManager) {
   },
   "ko": {
     "common": {
-      "brand": "termux-aichain",
+      "brand": "amv-aichain",
       "releaseTag": "v1.0.0 (Sovereign Multimodal Edge Release)",
       "pypiBtn": "PyPI 패키지",
       "npmBtn": "npm 패키지",
@@ -99,7 +99,7 @@ if (window.i18nManager) {
       }
     },
     "home": {
-      "title": "termux-aichain",
+      "title": "amv-aichain",
       "subtitle": "Android Termux 및 엣지 환경을 위한 무의존성 주권형 멀티모달 AI 프레임워크",
       "quickInstallTitle": "1줄 빠른 설치",
       "quickInstallDesc": "환경에 맞는 공식 패키지를 즉시 설치하세요:",
@@ -147,7 +147,7 @@ if (window.i18nManager) {
   },
   "ja": {
     "common": {
-      "brand": "termux-aichain",
+      "brand": "amv-aichain",
       "releaseTag": "v1.0.0 (Sovereign Multimodal Edge Release)",
       "pypiBtn": "PyPIパッケージ",
       "npmBtn": "npmパッケージ",
@@ -169,7 +169,7 @@ if (window.i18nManager) {
       }
     },
     "home": {
-      "title": "termux-aichain",
+      "title": "amv-aichain",
       "subtitle": "ブラウザおよびエッジ環境向けの高パフォーマンスオープンソースシステムライブラリ",
       "quickInstallTitle": "1行クイックインストール",
       "quickInstallDesc": "ランタイムに公式パッケージを直接インストールします:",

@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-Unit tests for termux_aichain.memory (ConversationBufferMemory, SQLiteEntityMemory, SQLiteVectorStore, FactExtractor)
+Unit tests for amv_aichain.memory (ConversationBufferMemory, SQLiteEntityMemory, SQLiteVectorStore, FactExtractor)
 """
 import pytest
-from termux_aichain.core.base import BaseChatModel
-from termux_aichain.core.schema import Message, HumanMessage, AIMessage, GenerationResult
-from termux_aichain.memory.buffer import ConversationBufferMemory
-from termux_aichain.memory.sqlite import SQLiteEntityMemory, SQLiteVectorStore
-from termux_aichain.memory.extractor import FactExtractor
+from amv_aichain.core.base import BaseChatModel
+from amv_aichain.core.schema import Message, HumanMessage, AIMessage, GenerationResult
+from amv_aichain.memory.buffer import ConversationBufferMemory
+from amv_aichain.memory.sqlite import SQLiteEntityMemory, SQLiteVectorStore
+from amv_aichain.memory.extractor import FactExtractor
 
 def test_conversation_buffer_memory_window():
     memory = ConversationBufferMemory(k=2) # Keep last 2 exchanges = 4 messages
@@ -94,7 +94,7 @@ def test_fact_extractor():
     assert mem.get_entity("ram_gb") == 12
 
 def test_sparse_bm25_embeddings():
-    from termux_aichain.memory.embeddings import SparseBM25Embeddings
+    from amv_aichain.memory.embeddings import SparseBM25Embeddings
     embedder = SparseBM25Embeddings(dimension=64)
 
     docs = [
@@ -112,7 +112,7 @@ def test_sparse_bm25_embeddings():
     assert abs(norm0 - 1.0) < 1e-4
 
     query_emb = embedder.embed_query("apple fruit")
-    from termux_aichain.memory.sqlite import _cosine_similarity
+    from amv_aichain.memory.sqlite import _cosine_similarity
     sim0 = _cosine_similarity(query_emb, doc_embs[0])
     sim1 = _cosine_similarity(query_emb, doc_embs[1])
     sim2 = _cosine_similarity(query_emb, doc_embs[2])
@@ -123,7 +123,7 @@ def test_sparse_bm25_embeddings():
 def test_local_embeddings_mock(monkeypatch):
     import io
     import json
-    from termux_aichain.memory.embeddings import LocalEmbeddings
+    from amv_aichain.memory.embeddings import LocalEmbeddings
 
     class FakeHTTPResponse:
         def __init__(self, data):
@@ -159,8 +159,8 @@ def test_local_embeddings_mock(monkeypatch):
     assert q_emb == [0.1, 0.2, 0.3, 0.4]
 
 def test_sqlite_vector_store_with_embeddings_binding():
-    from termux_aichain.memory.embeddings import SparseBM25Embeddings
-    from termux_aichain.core.splitters import Document
+    from amv_aichain.memory.embeddings import SparseBM25Embeddings
+    from amv_aichain.core.splitters import Document
 
     embedder = SparseBM25Embeddings(dimension=32)
     store = SQLiteVectorStore(":memory:", embeddings=embedder)
@@ -180,7 +180,7 @@ def test_sqlite_vector_store_with_embeddings_binding():
     assert len(store.similarity_search("Qwen models", k=1)) == 1
 
 def test_sqlite_vector_store_hybrid_search():
-    from termux_aichain.memory.embeddings import SparseBM25Embeddings
+    from amv_aichain.memory.embeddings import SparseBM25Embeddings
 
     embedder = SparseBM25Embeddings(dimension=64)
     store = SQLiteVectorStore(":memory:", embeddings=embedder)

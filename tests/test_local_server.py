@@ -1,12 +1,12 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-Unit tests for termux_aichain.core.providers (Advanced sampling & LocalServerManager)
+Unit tests for amv_aichain.core.providers (Advanced sampling & LocalServerManager)
 """
 import pytest
-from termux_aichain.core.schema import HumanMessage
-from termux_aichain.core.providers.openai_compatible import OpenAICompatibleChat
-from termux_aichain.core.providers.local_server import LocalServerConfig, LlamaCppServer, BitNetServer
+from amv_aichain.core.schema import HumanMessage
+from amv_aichain.core.providers.openai_compatible import OpenAICompatibleChat
+from amv_aichain.core.providers.local_server import LocalServerConfig, LlamaCppServer, BitNetServer
 
 def test_openai_compatible_advanced_payload():
     chat = OpenAICompatibleChat(

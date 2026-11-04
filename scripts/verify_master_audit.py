@@ -3,9 +3,9 @@
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
 ==============================================================================
-termux-aichain Master Audit Verifier (scripts/verify_master_audit.py)
+amv-aichain Master Audit Verifier (scripts/verify_master_audit.py)
 ==============================================================================
-Verifies that termux_aichain_full_source_report.md is byte-for-byte consistent
+Verifies that amv_aichain_full_source_report.md is byte-for-byte consistent
 with the current repository files and SHA-256 manifests under the self-hashing
 exclusion policy.
 """
@@ -30,7 +30,7 @@ def compute_file_sha256(filepath: Path) -> str:
     return hasher.hexdigest()
 
 def verify_report() -> bool:
-    report_path = REPO_ROOT / "termux_aichain_full_source_report.md"
+    report_path = REPO_ROOT / "amv_aichain_full_source_report.md"
     if not report_path.exists():
         print(f"[-] FATAL: {report_path} does not exist.")
         return False

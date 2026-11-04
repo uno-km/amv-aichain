@@ -23,7 +23,7 @@ test("Node.js: 1-Line serve HTTP invoke & security", async () => {
     const resHealth = await fetch(`http://127.0.0.1:${port}/health`);
     assert.strictEqual(resHealth.status, 200);
     const healthData = await resHealth.json();
-    assert.strictEqual(healthData.service, "termux-aichain");
+    assert.strictEqual(healthData.service, "amv-aichain");
 
     // 2. Unauthorized request
     const resUnauth = await fetch(`http://127.0.0.1:${port}/invoke`, {

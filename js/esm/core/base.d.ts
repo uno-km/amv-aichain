@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Core Runnable & Pipeline Abstractions
+ * amv-aichain Core Runnable & Pipeline Abstractions
  * ==============================================================================
  */
 import { Message, AIMessage, GenerationResult, StreamChunk } from "./schema.js";

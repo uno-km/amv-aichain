@@ -1,11 +1,11 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-Unit tests for termux_aichain.core.prompt
+Unit tests for amv_aichain.core.prompt
 """
 import pytest
-from termux_aichain.core.prompt import PromptTemplate, ChatPromptTemplate
-from termux_aichain.core.schema import HumanMessage, SystemMessage, AIMessage
+from amv_aichain.core.prompt import PromptTemplate, ChatPromptTemplate
+from amv_aichain.core.schema import HumanMessage, SystemMessage, AIMessage
 
 def test_prompt_template_basic():
     template = "Hello {name}, your task is {task}."

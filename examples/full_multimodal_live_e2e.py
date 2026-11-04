@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
 ==============================================================================
-termux-aichain Full Multimodal On-Device E2E Ground Truth Verification Suite
+amv-aichain Full Multimodal On-Device E2E Ground Truth Verification Suite
 ==============================================================================
 Demonstrates end-to-end integration across the entire sovereign ecosystem:
 1. Local Server Architecture (LlamaCppServer / BitNetServer CLI Builder & Flags)
@@ -24,12 +24,12 @@ import json
 from typing import Any, Dict, List
 
 sys.path.insert(0, os.path.abspath("."))
-sys.path.insert(0, os.path.abspath("termux_aichain"))
+sys.path.insert(0, os.path.abspath("amv_aichain"))
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-from termux_aichain import (
+from amv_aichain import (
     __version__,
     PromptTemplate,
     ChatPromptTemplate,
@@ -70,7 +70,7 @@ from termux_aichain import (
 
 def run_live_multimodal_verification():
     print("=" * 80)
-    print(f"[RUN] termux-aichain v{__version__} Full Multimodal Ground Truth Suite")
+    print(f"[RUN] amv-aichain v{__version__} Full Multimodal Ground Truth Suite")
     print(f"      Timestamp : {time.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"      Platform  : Android Bionic ARM64 / Host OS")
     print("=" * 80)

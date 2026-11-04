@@ -1,151 +1,55 @@
-# Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
-# SPDX-License-Identifier: Apache-2.0 OR Commercial-License
-"""
-==============================================================================
-termux-aichain: Sovereign Zero-Dependency Edge AI Framework for Termux & Android
-==============================================================================
-Copyright (c) 2026 AMEVA Open-Source Foundation & UnoKim.
-Licensed under the Apache License, Version 2.0.
-"""
+# SPDX-License-Identifier: Apache-2.0
+"""Deprecated alias of :mod:`amv_aichain`.
 
-from __future__ import annotations
+WHAT: ``import termux_aichain`` (and ``import termux_aichain.<sub>``) keeps working and returns the
+      very same module objects as ``amv_aichain``.
+WHY:  the package was renamed from termux-aichain to amv-aichain in 2.0.0; user code
+      written against the old import name should not break on upgrade.
+HOW:  a meta-path finder maps every ``termux_aichain.*`` name to ``amv_aichain.*`` and this
+      package replaces itself in ``sys.modules`` with ``amv_aichain``.
+
+This alias will be removed in a future major release. Import ``amv_aichain`` instead.
+"""
 import importlib
-from typing import Any
+import importlib.abc
+import importlib.util
+import sys
+import warnings
 
-__version__ = "1.3.0"
-__author__ = "UnoKim <uno-km@users.noreply.github.com>"
+_OLD = "termux_aichain"
+_NEW = "amv_aichain"
 
-_LAZY_IMPORTS = {
-    # Schema
-    "Message": ("termux_aichain.core.schema", "Message"),
-    "HumanMessage": ("termux_aichain.core.schema", "HumanMessage"),
-    "AIMessage": ("termux_aichain.core.schema", "AIMessage"),
-    "SystemMessage": ("termux_aichain.core.schema", "SystemMessage"),
-    "ToolMessage": ("termux_aichain.core.schema", "ToolMessage"),
-    "UsageInfo": ("termux_aichain.core.schema", "UsageInfo"),
-    "GenerationResult": ("termux_aichain.core.schema", "GenerationResult"),
-    "StreamChunk": ("termux_aichain.core.schema", "StreamChunk"),
-    # Prompt
-    "PromptTemplate": ("termux_aichain.core.prompt", "PromptTemplate"),
-    "ChatPromptTemplate": ("termux_aichain.core.prompt", "ChatPromptTemplate"),
-    # Base
-    "Runnable": ("termux_aichain.core.base", "Runnable"),
-    "RunnableLambda": ("termux_aichain.core.base", "RunnableLambda"),
-    "RunnableSequence": ("termux_aichain.core.base", "RunnableSequence"),
-    "RunnablePassthrough": ("termux_aichain.core.base", "RunnablePassthrough"),
-    "RunnableParallel": ("termux_aichain.core.base", "RunnableParallel"),
-    "BaseChatModel": ("termux_aichain.core.base", "BaseChatModel"),
-    # Providers
-    "OpenAICompatibleChat": ("termux_aichain.core.providers.openai_compatible", "OpenAICompatibleChat"),
-    "BitNetChat": ("termux_aichain.core.providers.bitnet", "BitNetChat"),
-    "LocalServerConfig": ("termux_aichain.core.providers.local_server", "LocalServerConfig"),
-    "LocalServerManager": ("termux_aichain.core.providers.local_server", "LocalServerManager"),
-    "LlamaCppServer": ("termux_aichain.core.providers.local_server", "LlamaCppServer"),
-    "BitNetServer": ("termux_aichain.core.providers.local_server", "BitNetServer"),
-    # Enterprise LocalAgent & 4 Execution Modes
-    "LocalAgent": ("termux_aichain.core.local_agent", "LocalAgent"),
-    "AgentState": ("termux_aichain.core.agent_types", "AgentState"),
-    "ConnectConfig": ("termux_aichain.core.agent_types", "ConnectConfig"),
-    "ManagedConfig": ("termux_aichain.core.agent_types", "ManagedConfig"),
-    "EmbeddedConfig": ("termux_aichain.core.agent_types", "EmbeddedConfig"),
-    "RemoteConfig": ("termux_aichain.core.agent_types", "RemoteConfig"),
-    "ToolPolicy": ("termux_aichain.core.agent_types", "ToolPolicy"),
-    "ToolRule": ("termux_aichain.core.agent_types", "ToolRule"),
-    "ToolCallCandidate": ("termux_aichain.core.agent_types", "ToolCallCandidate"),
-    "TransportSecurityConfig": ("termux_aichain.core.agent_types", "TransportSecurityConfig"),
-    # Output Normalization
-    "OutputNormalizer": ("termux_aichain.output.normalizer", "OutputNormalizer"),
-    "RawModelResponse": ("termux_aichain.output.normalizer", "RawModelResponse"),
-    "NormalizedModelResponse": ("termux_aichain.output.normalizer", "NormalizedModelResponse"),
-    # Standard Errors
-    "LocalAgentError": ("termux_aichain.core.agent_types", "LocalAgentError"),
-    "ServerConnectionRefusedError": ("termux_aichain.core.agent_types", "ServerConnectionRefusedError"),
-    "ServerProtocolMismatchError": ("termux_aichain.core.agent_types", "ServerProtocolMismatchError"),
-    "ModelIdentityMismatchError": ("termux_aichain.core.agent_types", "ModelIdentityMismatchError"),
-    "ManagedSpawnNotSupportedError": ("termux_aichain.core.agent_types", "ManagedSpawnNotSupportedError"),
-    "ServerStartupTimeoutError": ("termux_aichain.core.agent_types", "ServerStartupTimeoutError"),
-    "DuplicateServerOwnershipError": ("termux_aichain.core.agent_types", "DuplicateServerOwnershipError"),
-    "RemoteFallbackNotAuthorizedError": ("termux_aichain.core.agent_types", "RemoteFallbackNotAuthorizedError"),
-    "ToolApprovalRequiredError": ("termux_aichain.core.agent_types", "ToolApprovalRequiredError"),
-    "ToolArgumentValidationError": ("termux_aichain.core.agent_types", "ToolArgumentValidationError"),
-    "ToolRateLimitExceededError": ("termux_aichain.core.agent_types", "ToolRateLimitExceededError"),
-    "ToolPolicyDeniedError": ("termux_aichain.core.agent_types", "ToolPolicyDeniedError"),
-    "ToolCallRepairNotAllowedError": ("termux_aichain.core.agent_types", "ToolCallRepairNotAllowedError"),
-    "DuplicateToolAliasError": ("termux_aichain.core.agent_types", "DuplicateToolAliasError"),
-    "NativeBackendUnavailableError": ("termux_aichain.core.agent_types", "NativeBackendUnavailableError"),
-    # Parsers
-    "StringOutputParser": ("termux_aichain.core.parsers", "StringOutputParser"),
-    "JsonOutputParser": ("termux_aichain.core.parsers", "JsonOutputParser"),
-    "RegexOutputParser": ("termux_aichain.core.parsers", "RegexOutputParser"),
-    # Splitters
-    "Document": ("termux_aichain.core.splitters", "Document"),
-    "CharacterTextSplitter": ("termux_aichain.core.splitters", "CharacterTextSplitter"),
-    "RecursiveCharacterTextSplitter": ("termux_aichain.core.splitters", "RecursiveCharacterTextSplitter"),
-    "TextLoader": ("termux_aichain.core.splitters", "TextLoader"),
-    "MarkdownLoader": ("termux_aichain.core.splitters", "MarkdownLoader"),
-    "JSONLoader": ("termux_aichain.core.splitters", "JSONLoader"),
-    "DirectoryLoader": ("termux_aichain.core.splitters", "DirectoryLoader"),
-    "format_docs": ("termux_aichain.core.splitters", "format_docs"),
-    # Graph
-    "StateGraph": ("termux_aichain.graph.state", "StateGraph"),
-    "CompiledGraph": ("termux_aichain.graph.state", "CompiledGraph"),
-    "START": ("termux_aichain.graph.state", "START"),
-    "END": ("termux_aichain.graph.state", "END"),
-    "Tool": ("termux_aichain.graph.agent", "Tool"),
-    "tool": ("termux_aichain.graph.agent", "tool"),
-    "create_react_agent": ("termux_aichain.graph.agent", "create_react_agent"),
-    # Memory
-    "ConversationBufferMemory": ("termux_aichain.memory.buffer", "ConversationBufferMemory"),
-    "SQLiteEntityMemory": ("termux_aichain.memory.sqlite", "SQLiteEntityMemory"),
-    "SQLiteVectorStore": ("termux_aichain.memory.sqlite", "SQLiteVectorStore"),
-    "VectorStoreRetriever": ("termux_aichain.memory.sqlite", "VectorStoreRetriever"),
-    "NativeVectorEngine": ("termux_aichain.memory.simd", "NativeVectorEngine"),
-    "get_simd_engine": ("termux_aichain.memory.simd", "get_simd_engine"),
-    "FactExtractor": ("termux_aichain.memory.extractor", "FactExtractor"),
-    "BaseEmbeddings": ("termux_aichain.memory.embeddings", "BaseEmbeddings"),
-    "LocalEmbeddings": ("termux_aichain.memory.embeddings", "LocalEmbeddings"),
-    "SparseBM25Embeddings": ("termux_aichain.memory.embeddings", "SparseBM25Embeddings"),
-    # Serve
-    "AgentServer": ("termux_aichain.serve.server", "AgentServer"),
-    "serve": ("termux_aichain.serve.server", "serve"),
-    "DASHBOARD_HTML": ("termux_aichain.serve.dashboard", "DASHBOARD_HTML"),
-    # Trace
-    "TraceSpan": ("termux_aichain.trace.tracer", "TraceSpan"),
-    "Tracer": ("termux_aichain.trace.tracer", "Tracer"),
-    "traceable": ("termux_aichain.trace.tracer", "traceable"),
-    # Device Tools
-    "get_battery_status": ("termux_aichain.device.tools", "get_battery_status"),
-    "get_sensor_data": ("termux_aichain.device.tools", "get_sensor_data"),
-    "get_device_location": ("termux_aichain.device.tools", "get_device_location"),
-    "record_speech_to_text": ("termux_aichain.device.tools", "record_speech_to_text"),
-    "vibrate_device": ("termux_aichain.device.tools", "vibrate_device"),
-    "send_notification": ("termux_aichain.device.tools", "send_notification"),
-    "speak_tts": ("termux_aichain.device.tools", "speak_tts"),
-    "execute_shell": ("termux_aichain.device.tools", "execute_shell"),
-    "get_default_device_tools": ("termux_aichain.device.tools", "get_default_device_tools"),
-    # Ecosystem Tools
-    "infer_bitnet_llm": ("termux_aichain.device.ecosystem", "infer_bitnet_llm"),
-    "transcribe_speech": ("termux_aichain.device.ecosystem", "transcribe_speech"),
-    "generate_diffusion_image": ("termux_aichain.device.ecosystem", "generate_diffusion_image"),
-    "browse_web_headless": ("termux_aichain.device.ecosystem", "browse_web_headless"),
-    "synthesize_speech": ("termux_aichain.device.ecosystem", "synthesize_speech"),
-    "speak_text": ("termux_aichain.device.ecosystem", "speak_text"),
-    "analyze_image_vlm": ("termux_aichain.device.ecosystem", "analyze_image_vlm"),
-    "detect_faces": ("termux_aichain.device.ecosystem", "detect_faces"),
-    "detect_edges_canny": ("termux_aichain.device.ecosystem", "detect_edges_canny"),
-    "get_ecosystem_tools": ("termux_aichain.device.ecosystem", "get_ecosystem_tools"),
-}
+warnings.warn(
+    f"'{_OLD}' was renamed to '{_NEW}'; import '{_NEW}' instead. "
+    "The old name will be removed in a future major release.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
-__all__ = ["__version__"] + list(_LAZY_IMPORTS.keys())
 
-def __getattr__(name: str) -> Any:
-    if name in _LAZY_IMPORTS:
-        module_path, attr_name = _LAZY_IMPORTS[name]
-        mod = importlib.import_module(module_path)
-        val = getattr(mod, attr_name)
-        globals()[name] = val
-        return val
-    raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
+class _AliasLoader(importlib.abc.Loader):
+    def create_module(self, spec):
+        return importlib.import_module(_NEW + spec.name[len(_OLD):])
 
-def __dir__() -> list[str]:
-    return sorted(list(globals().keys()) + list(_LAZY_IMPORTS.keys()))
+    def exec_module(self, module):
+        return None
+
+
+class _AliasFinder(importlib.abc.MetaPathFinder):
+    _loader = _AliasLoader()
+
+    def find_spec(self, fullname, path=None, target=None):
+        if not fullname.startswith(_OLD + "."):
+            return None
+        if fullname.endswith(".__main__"):
+            # Let runpy load amv_aichain/__main__.py through the normal path finder.
+            return None
+        return importlib.util.spec_from_loader(fullname, self._loader)
+
+
+if not any(getattr(f, "_amv_alias_of", None) == _OLD for f in sys.meta_path):
+    _finder = _AliasFinder()
+    _finder._amv_alias_of = _OLD
+    sys.meta_path.insert(0, _finder)
+
+sys.modules[_OLD] = importlib.import_module(_NEW)

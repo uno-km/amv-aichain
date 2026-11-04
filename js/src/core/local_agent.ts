@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain LocalAgent Runtime (TypeScript ESM)
+ * amv-aichain LocalAgent Runtime (TypeScript ESM)
  * ==============================================================================
  * Sovereign enterprise agent runtime with fail-closed identity verification,
  * /v1/models capability enumeration fallback, and verifier dependency injection.

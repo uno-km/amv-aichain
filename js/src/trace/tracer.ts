@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Trace Engine: Lightweight CLI Observability (TypeScript ESM)
+ * amv-aichain Trace Engine: Lightweight CLI Observability (TypeScript ESM)
  * ==============================================================================
  */
 

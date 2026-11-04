@@ -19,7 +19,7 @@
 
 외부 의존성 0개(Zero-Dependency)의 순수 표준 라이브러리 기반으로 LangChain 호환 LCEL 파이프 체이닝(prompt | llm | parser), StateGraph 자율 에이전트, 온디바이스 SQLite 코사인 벡터 검색, 스마트폰 하드웨어 직접 제어(배터리, 온도, 진동, GPS)를 94KB 초경량 코어로 완벽히 제공합니다.
 
-Termux-AIChain provides 100% pure standard-library LCEL pipe chaining (prompt | llm | parser), autonomous StateGraph agents, on-device SQLite vector RAG, and first-class Android smartphone hardware actuation (battery, temperature, haptics, GPS) in a tiny 94KB footprint.
+AMV-AIChain provides 100% pure standard-library LCEL pipe chaining (prompt | llm | parser), autonomous StateGraph agents, on-device SQLite vector RAG, and first-class Android smartphone hardware actuation (battery, temperature, haptics, GPS) in a tiny 94KB footprint.
 
 ---
 
@@ -30,7 +30,7 @@ Termux-AIChain provides 100% pure standard-library LCEL pipe chaining (prompt | 
 pip install amv-aichain
 ```
 ```python
-from termux_aichain import PromptTemplate, OpenAICompatibleChat, StringOutputParser, get_battery_status
+from amv_aichain import PromptTemplate, OpenAICompatibleChat, StringOutputParser, get_battery_status
 
 # 1. Read physical smartphone hardware telemetry
 battery = get_battery_status()

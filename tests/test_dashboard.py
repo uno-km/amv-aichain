@@ -1,13 +1,13 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-Unit tests for termux_aichain.serve.dashboard (Live HTML & Trace/Graph APIs)
+Unit tests for amv_aichain.serve.dashboard (Live HTML & Trace/Graph APIs)
 """
 import json
 import urllib.request
 import pytest
-from termux_aichain.core.prompt import PromptTemplate
-from termux_aichain.serve.server import AgentServer
+from amv_aichain.core.prompt import PromptTemplate
+from amv_aichain.serve.server import AgentServer
 
 @pytest.fixture
 def running_dashboard_server():
@@ -26,7 +26,7 @@ def test_dashboard_html_endpoint(running_dashboard_server):
         assert resp.status == 200
         content = resp.read().decode("utf-8")
         assert "<!DOCTYPE html>" in content
-        assert "termux-aichain" in content
+        assert "amv-aichain" in content
         assert "Live Monitor" in content
 
 def test_api_traces_endpoint(running_dashboard_server):

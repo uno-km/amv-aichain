@@ -11,20 +11,20 @@ import tempfile
 import pytest
 from pathlib import Path
 
-from termux_aichain.core.base import (
+from amv_aichain.core.base import (
     RunnableLambda,
     RunnablePassthrough,
     RunnableParallel,
     RunnableSequence,
 )
-from termux_aichain.core.splitters import (
+from amv_aichain.core.splitters import (
     Document,
     DirectoryLoader,
     format_docs,
 )
-from termux_aichain.core.prompt import PromptTemplate
-from termux_aichain.memory.sqlite import SQLiteVectorStore, VectorStoreRetriever
-from termux_aichain.memory.embeddings import SparseBM25Embeddings
+from amv_aichain.core.prompt import PromptTemplate
+from amv_aichain.memory.sqlite import SQLiteVectorStore, VectorStoreRetriever
+from amv_aichain.memory.embeddings import SparseBM25Embeddings
 
 
 def test_runnable_passthrough_identity():

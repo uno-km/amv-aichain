@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain: Sovereign Zero-Dependency Edge AI Framework for Termux & Android
+ * amv-aichain: Sovereign Zero-Dependency Edge AI Framework for Termux & Android
  * ==============================================================================
  * Copyright (c) 2026 AMEVA Open-Source Foundation & UnoKim.
  * Licensed under the Apache License, Version 2.0.

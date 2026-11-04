@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Core Text Splitters & Micro Document Loaders
+ * amv-aichain Core Text Splitters & Micro Document Loaders
  * ==============================================================================
  */
 

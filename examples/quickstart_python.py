@@ -2,7 +2,7 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-termux-aichain Phase 1 Quickstart Example
+amv-aichain Phase 1 Quickstart Example
 Runs a complete zero-dependency pipeline without external packages.
 """
 
@@ -14,7 +14,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-from termux_aichain import (
+from amv_aichain import (
     PromptTemplate,
     ChatPromptTemplate,
     OpenAICompatibleChat,

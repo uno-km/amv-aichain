@@ -1,11 +1,11 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-Unit tests for termux_aichain.core.parsers
+Unit tests for amv_aichain.core.parsers
 """
 import pytest
-from termux_aichain.core.parsers import StringOutputParser, JsonOutputParser, RegexOutputParser
-from termux_aichain.core.schema import AIMessage, GenerationResult
+from amv_aichain.core.parsers import StringOutputParser, JsonOutputParser, RegexOutputParser
+from amv_aichain.core.schema import AIMessage, GenerationResult
 
 def test_string_output_parser():
     parser = StringOutputParser(strip=True)

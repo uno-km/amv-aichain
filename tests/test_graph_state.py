@@ -1,10 +1,10 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-Unit tests for termux_aichain.graph.state (StateGraph, Cycles, Conditional Edges)
+Unit tests for amv_aichain.graph.state (StateGraph, Cycles, Conditional Edges)
 """
 import pytest
-from termux_aichain.graph.state import StateGraph, START, END
+from amv_aichain.graph.state import StateGraph, START, END
 
 def test_linear_state_graph():
     workflow = StateGraph()

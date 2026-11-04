@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
 ==============================================================================
-termux-aichain Microscopic Edge Case & Boundary Verification Suite
+amv-aichain Microscopic Edge Case & Boundary Verification Suite
 ==============================================================================
 Tests extreme boundary conditions, malformed payloads, zero-division,
 deep recursion limits, and fault tolerance across all core modules.
@@ -11,7 +11,7 @@ Zero external heavy dependencies - Pure Python 3.10+ standard library.
 
 import json
 import pytest
-from termux_aichain import (
+from amv_aichain import (
     PromptTemplate,
     ChatPromptTemplate,
     JsonOutputParser,

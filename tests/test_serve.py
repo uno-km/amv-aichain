@@ -1,15 +1,15 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-Unit tests for termux_aichain.serve (AgentServer & serve helper)
+Unit tests for amv_aichain.serve (AgentServer & serve helper)
 """
 import json
 import time
 import urllib.request
 import pytest
-from termux_aichain.core.base import RunnableLambda
-from termux_aichain.core.prompt import PromptTemplate
-from termux_aichain.serve.server import AgentServer, serve
+from amv_aichain.core.base import RunnableLambda
+from amv_aichain.core.prompt import PromptTemplate
+from amv_aichain.serve.server import AgentServer, serve
 
 @pytest.fixture
 def running_server():
@@ -32,7 +32,7 @@ def test_server_health(running_server):
         assert resp.status == 200
         data = json.loads(resp.read().decode("utf-8"))
         assert data["status"] == "ok"
-        assert data["service"] == "termux-aichain"
+        assert data["service"] == "amv-aichain"
 
 def test_server_auth_and_body_limits():
     prompt = PromptTemplate.from_template("Echo: {message}")

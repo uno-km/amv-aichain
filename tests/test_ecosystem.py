@@ -1,11 +1,11 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-Unit tests for termux_aichain.device.ecosystem (BitNet, STT, Diffusion, Playwright edge integrations)
+Unit tests for amv_aichain.device.ecosystem (BitNet, STT, Diffusion, Playwright edge integrations)
 """
 import json
 import pytest
-from termux_aichain.device.ecosystem import (
+from amv_aichain.device.ecosystem import (
     infer_bitnet_llm,
     transcribe_speech,
     generate_diffusion_image,
@@ -85,12 +85,12 @@ def test_get_ecosystem_tools():
     tools = get_ecosystem_tools()
     assert len(tools) == 9
     names = [t.name for t in tools]
-    assert "termux_bitnet_infer" in names
-    assert "termux_stt_transcribe" in names
-    assert "termux_diffusion_generate" in names
-    assert "termux_playwright_browse" in names
-    assert "termux_tts_synth" in names
+    assert "amv_bitnet_infer" in names
+    assert "amv_stt_transcribe" in names
+    assert "amv_diffusion_generate" in names
+    assert "amv_playwright_browse" in names
+    assert "amv_tts_synth" in names
     assert "termux_tts_speak" in names
-    assert "termux_vision_vlm" in names
-    assert "termux_vision_detect_face" in names
-    assert "termux_vision_canny" in names
+    assert "amv_vision_vlm" in names
+    assert "amv_vision_detect_face" in names
+    assert "amv_vision_canny" in names

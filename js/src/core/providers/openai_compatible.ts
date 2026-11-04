@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Core Engine: OpenAI-Compatible & Local LLM Provider (TypeScript ESM)
+ * amv-aichain Core Engine: OpenAI-Compatible & Local LLM Provider (TypeScript ESM)
  * ==============================================================================
  */
 

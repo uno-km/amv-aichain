@@ -1,24 +1,24 @@
-name: Termux-AIChain
+name: AMV-AIChain
 lib_slug: aichain
-package_name_pypi: termux-aichain
-package_name_npm: termux-aichain
-version: v1.3.0
+package_name_pypi: amv-aichain
+package_name_npm: amv-aichain
+version: v2.0.0
 release_name: LCEL RAG Pipeline, SIMD Vector Acceleration & Parallel StateGraph
 license: Apache-2.0
 platform: Android Termux (ARM64) / Python 3.10+ / Node.js 18+ ESM
-github_repo_url: https://github.com/uno-km/termux-aichain
+github_repo_url: https://github.com/uno-km/amv-aichain
 tagline_en: Why LangChain on Termux? Bloat & Crash vs 94KB Zero-Dep LCEL & Hardware Native Agents
 tagline_ko: 왜 터먹스에선 랭체인 대신 AIChain인가? 수백MB 의존성 폭탄 vs 94KB 제로-의존성 LCEL 및 하드웨어 액추에이션
-quick_install_cmd: 'pip install termux-aichain
+quick_install_cmd: 'pip install amv-aichain
 
   # or:
 
-  npm install termux-aichain'
+  npm install amv-aichain'
 why_challenge_en: Standard enterprise frameworks (LangChain, LlamaIndex, CrewAI) pull in 45+ heavy dependencies (Pydantic-core, Chroma, Tiktoken) weighing 200MB+ that constantly fail to compile on Android Bionic ARM64 and trigger instant Out-Of-Memory (LMK) kernel kills.
 why_challenge_ko: 기존 LangChain 및 LlamaIndex는 45개 이상의 무거운 외부 의존성(Pydantic-core, ChromaDB, Tiktoken)으로 인해 안드로이드 Bionic ARM64에서 C/Rust 컴파일 오류를 일으키고, 180MB가 넘는 유휴 메모리 점유로 안드로이드 LMK(Low Memory Killer)에 의해 프로세스가 즉각 강제 종료됩니다.
-description_en: Termux-AIChain provides 100% pure standard-library LCEL pipe chaining (prompt | llm | parser), autonomous StateGraph agents, on-device SQLite vector RAG, and first-class Android smartphone hardware actuation (battery, temperature, haptics, GPS) in a tiny 94KB footprint.
+description_en: AMV-AIChain provides 100% pure standard-library LCEL pipe chaining (prompt | llm | parser), autonomous StateGraph agents, on-device SQLite vector RAG, and first-class Android smartphone hardware actuation (battery, temperature, haptics, GPS) in a tiny 94KB footprint.
 description_ko: 외부 의존성 0개(Zero-Dependency)의 순수 표준 라이브러리 기반으로 LangChain 호환 LCEL 파이프 체이닝(prompt | llm | parser), StateGraph 자율 에이전트, 온디바이스 SQLite 코사인 벡터 검색, 스마트폰 하드웨어 직접 제어(배터리, 온도, 진동, GPS)를 94KB 초경량 코어로 완벽히 제공합니다.
-code_example_py: 'from termux_aichain import PromptTemplate, OpenAICompatibleChat, StringOutputParser, get_battery_status
+code_example_py: 'from amv_aichain import PromptTemplate, OpenAICompatibleChat, StringOutputParser, get_battery_status
 
 
   # 1. Read physical smartphone hardware telemetry
@@ -40,7 +40,7 @@ code_example_py: 'from termux_aichain import PromptTemplate, OpenAICompatibleCha
   report = chain.invoke({"status": battery})
 
   print("AI Diagnostic:", report)'
-code_example_js: 'import { PromptTemplate, OpenAICompatibleChat, StringOutputParser, getBatteryStatus } from ''termux-aichain'';
+code_example_js: 'import { PromptTemplate, OpenAICompatibleChat, StringOutputParser, getBatteryStatus } from ''amv-aichain'';
 
 
   // 1. Read physical smartphone hardware telemetry

@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Core Runnable & Pipeline Abstractions
+ * amv-aichain Core Runnable & Pipeline Abstractions
  * ==============================================================================
  */
 export class RunnableLambda {

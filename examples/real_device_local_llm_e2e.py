@@ -2,7 +2,7 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-termux-aichain Real-Device On-Device LLM & Agent End-to-End Test
+amv-aichain Real-Device On-Device LLM & Agent End-to-End Test
 Manages local llama-server lifecycle and verifies complete AI chaining on Samsung Galaxy S20.
 Zero fake simulation strings - 100% Ground Truth native execution & diagnostics.
 """
@@ -18,7 +18,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-from termux_aichain import (
+from amv_aichain import (
     OpenAICompatibleChat,
     ChatPromptTemplate,
     JsonOutputParser,
@@ -30,8 +30,8 @@ from termux_aichain import (
 
 from pathlib import Path
 
-LLAMA_SERVER_BIN = os.environ.get("TERMUX_LLAMA_BIN", str(Path.home() / ".termux-llama" / "bin" / "llama-server"))
-LLAMA_MODEL_PATH = os.environ.get("TERMUX_LLAMA_MODEL", str(Path.home() / ".termux-llama" / "models" / "Llama-3.2-3B-Instruct-Q4_K_M.gguf"))
+LLAMA_SERVER_BIN = os.environ.get("TERMUX_LLAMA_BIN", str(Path.home() / ".amv-llama" / "bin" / "llama-server"))
+LLAMA_MODEL_PATH = os.environ.get("TERMUX_LLAMA_MODEL", str(Path.home() / ".amv-llama" / "models" / "Llama-3.2-3B-Instruct-Q4_K_M.gguf"))
 PORT = 8088
 
 def wait_for_server(port: int, max_wait: float = 20.0) -> bool:
@@ -48,7 +48,7 @@ def wait_for_server(port: int, max_wait: float = 20.0) -> bool:
 
 def main():
     print("=" * 64)
-    print("[RUN] termux-aichain Real-Device Local LLM Integration Suite")
+    print("[RUN] amv-aichain Real-Device Local LLM Integration Suite")
     print("=" * 64)
 
     server_proc = None

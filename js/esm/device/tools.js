@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Device Toolkit: Android & Termux Native Tools (TypeScript ESM)
+ * amv-aichain Device Toolkit: Android & Termux Native Tools (TypeScript ESM)
  * ==============================================================================
  * Zero fake simulation strings - 100% Ground Truth native execution & diagnostics.
  */

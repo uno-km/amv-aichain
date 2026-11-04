@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Embeddings Engine: Zero-Dependency Vectorizers (Node.js ESM)
+ * amv-aichain Embeddings Engine: Zero-Dependency Vectorizers (Node.js ESM)
  * ==============================================================================
  * Provides standard BaseEmbeddings, LocalEmbeddings (llama-server /v1/embeddings),
  * and SparseBM25Embeddings (pure math zero-state offline vectorizer).

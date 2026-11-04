@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Core Schema (TypeScript ESM)
+ * amv-aichain Core Schema (TypeScript ESM)
  * ==============================================================================
  * Zero external heavy dependencies - Pure Web & Node.js Standards.
  */

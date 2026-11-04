@@ -1,13 +1,13 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
 """
-Unit tests for termux_aichain.trace (Tracer, TraceSpan, traceable)
+Unit tests for amv_aichain.trace (Tracer, TraceSpan, traceable)
 """
 import os
 import tempfile
 import time
 import pytest
-from termux_aichain.trace.tracer import Tracer, TraceSpan, traceable
+from amv_aichain.trace.tracer import Tracer, TraceSpan, traceable
 
 def test_tracer_hierarchy_and_tps():
     tracer = Tracer(root_name="RootPipeline")

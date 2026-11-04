@@ -1,9 +1,9 @@
 # Copyright (c) 2026 Uno Kim / AMEVA Foundation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 OR Commercial-License
-from termux_aichain.output.normalizer import OutputParserPolicy
+from amv_aichain.output.normalizer import OutputParserPolicy
 import pytest
-from termux_aichain.output.scanner import extract_json_candidates, repair_json_light, try_parse_json
-from termux_aichain.output.normalizer import OutputNormalizer, RawModelResponse, ToolCall
+from amv_aichain.output.scanner import extract_json_candidates, repair_json_light, try_parse_json
+from amv_aichain.output.normalizer import OutputNormalizer, RawModelResponse, ToolCall
 
 def test_scanner_nested_brackets_and_strings():
     text = 'Prefix text {"name": "test", "items": [{"val": 1}, {"val": 2}], "text_with_brace": "foo {bar}"} trailing text'

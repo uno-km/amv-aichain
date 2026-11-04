@@ -7,7 +7,7 @@ from __future__ import annotations
 import time
 import asyncio
 import pytest
-from termux_aichain.graph.state import StateGraph, START, END
+from amv_aichain.graph.state import StateGraph, START, END
 
 
 def test_stategraph_parallel_fanout_sync():

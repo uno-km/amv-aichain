@@ -4,7 +4,7 @@
  */
 /**
  * ==============================================================================
- * @termux-ai/chain Serve Engine: 1-Line REST & SSE Serving (TypeScript ESM)
+ * amv-aichain Serve Engine: 1-Line REST & SSE Serving (TypeScript ESM)
  * ==============================================================================
  */
 import * as http from "node:http";
@@ -107,7 +107,7 @@ export function serve(runnable, options = {}) {
             res.writeHead(200, { "Content-Type": "application/json" });
             res.end(JSON.stringify({
                 status: "ok",
-                service: "termux-aichain",
+                service: "amv-aichain",
                 protocolVersion: "1.0",
                 model: { id: "default" }
             }));
@@ -118,7 +118,7 @@ export function serve(runnable, options = {}) {
             res.writeHead(200, { "Content-Type": "application/json" });
             res.end(JSON.stringify({
                 object: "list",
-                data: [{ id: "default", object: "model", owned_by: "termux-aichain" }]
+                data: [{ id: "default", object: "model", owned_by: "amv-aichain" }]
             }));
             return;
         }
@@ -181,7 +181,7 @@ export function serve(runnable, options = {}) {
         res.end(JSON.stringify({ error: "NOT_FOUND", message: `Endpoint ${req.url} not found.` }));
     });
     server.listen(port, host, () => {
-        console.log(`[*] @termux-ai/chain serving agent on http://${host}:${port}${prefix}`);
+        console.log(`[*] amv-aichain serving agent on http://${host}:${port}${prefix}`);
     });
     return server;
 }

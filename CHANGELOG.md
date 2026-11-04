@@ -1,3 +1,15 @@
+# v2.0.0 (2026-11-04) — Python import name follows the amv-aichain package name
+
+### Changed
+- The Python package is now `amv_aichain` (previously `termux_aichain`). Code, CLI entry points, scripts, docs and cross-package references use the amv-* names.
+- `import termux_aichain` keeps working through a deprecated alias that returns the same module objects and emits a `DeprecationWarning`. The alias will be removed in a future major release.
+
+### Unchanged
+- On-disk cache and data directories (for example `~/.cache/termux-*`) keep their names, so models already downloaded on devices stay in use.
+- Termux platform commands (`termux-tts-speak`, `termux-wake-lock`, `termux-api`, ...) keep their names.
+
+---
+
 # v1.3.0 (2026-10-14) — LCEL RAG Pipeline, SIMD Vector Acceleration & Parallel StateGraph
 
 Delivered 1st-class LCEL RAG abstractions, C-ABI dynamic SIMD vector acceleration engine, parallel Fan-Out/Fan-In StateGraph execution with State Reducer, and complete Python & Node.js ESM test suite expansion (171 pytest + 21 node:test 100% Pass).
