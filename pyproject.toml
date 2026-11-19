@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "amv-aichain"
-version = "2.0.0"
+version = "2.0.1"
 description = "Zero-dependency AI chaining and autonomous agent framework utilizing device resources for Android Termux & Edge"
 readme = "README.md"
 authors = [{ name = "UnoKim", email = "uno-km@users.noreply.github.com" }]
@@ -31,7 +31,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/uno-km/amv-aichain"
+Documentation = "https://ameva.pro/lib/aichain/"
+Homepage = "https://ameva.pro/lib/aichain/"
 Repository = "https://github.com/uno-km/amv-aichain.git"
 Issues = "https://github.com/uno-km/amv-aichain/issues"
 

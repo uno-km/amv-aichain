@@ -34,7 +34,7 @@ console.log('AI Diagnostic:', report);
 AMV-AIChain provides 100% pure standard-library LCEL pipe chaining (prompt | llm | parser), autonomous StateGraph agents, on-device SQLite vector RAG, and first-class Android smartphone hardware actuation (battery, temperature, haptics, GPS) in a tiny 94KB footprint.
 
 ## Documentation
-- [Official Documentation & API Reference](https://uno-km.vercel.app/lib/aichain/)
+- [Official Documentation & API Reference](https://ameva.pro/lib/aichain/)
 - [GitHub Repository](https://github.com/uno-km/amv-aichain)
 
 ## License

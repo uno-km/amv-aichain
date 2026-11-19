@@ -1,6 +1,6 @@
 {
   "name": "amv-aichain",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Zero-dependency AI chaining and autonomous agent framework utilizing device resources for Node.js ESM and Android Termux",
   "type": "module",
   "main": "js/esm/index.js",
@@ -47,7 +47,7 @@
   "bugs": {
     "url": "https://github.com/uno-km/amv-aichain/issues"
   },
-  "homepage": "https://uno-km.vercel.app/lib/aichain/",
+  "homepage": "https://ameva.pro/lib/aichain/",
   "devDependencies": {
     "@types/node": "^26.3.0",
     "typescript": "^5.0.0"
