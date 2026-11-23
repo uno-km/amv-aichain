@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="amv-aichain",
-    version="2.0.1",
+    version="2.0.2",
     description="Ultra-lightweight Zero-Dependency AI chaining & agent framework for Termux, Android and Edge computing.",
     long_description=open("README.md", encoding="utf-8").read() if open("README.md", encoding="utf-8") else "",
     long_description_content_type="text/markdown",
@@ -14,7 +14,7 @@ setup(
     packages=find_packages(),
     python_requires=">=3.10",
     install_requires=[
-        "ameva-runtime>=2.0.0",
+        "amv-runtime>=2.9.0",
     ],
     classifiers=[
         "License :: OSI Approved :: Apache Software License",

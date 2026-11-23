@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "amv-aichain"
-version = "2.0.1"
+version = "2.0.2"
 description = "Zero-dependency AI chaining and autonomous agent framework utilizing device resources for Android Termux & Edge"
 readme = "README.md"
 authors = [{ name = "UnoKim", email = "uno-km@users.noreply.github.com" }]
@@ -26,8 +26,8 @@ classifiers = [
 keywords = ["termux", "android", "edge-ai", "langchain", "llama-cpp", "bitnet", "agent", "zero-dependency"]
 requires-python = ">=3.10"
 dependencies = [
-    "ameva-runtime>=2.0.0",
-    "ameva-component-sdk>=0.1.0,<2.0",
+    "amv-runtime>=2.9.0",
+    "amv-component-sdk>=0.1.0,<2.0",
 ]
 
 [project.urls]
